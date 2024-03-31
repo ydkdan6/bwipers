@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
-  <head>
-	@include('frontend.layouts.shop-head')	
-  </head>
+
+<head>
+    @include('frontend.layouts.shop-head')
+</head>
 
 <body class="home">
+    {{-- <x:notify-messages /> --}}
     <div class="page-wrapper">
         <!-- Header -->
-		@include('frontend.layouts.header')
+        @include('frontend.layouts.header')
         <!-- End of Header -->
 
         <!-- Start of Main -->
         <main class="main">
-          @include('user.layouts.notification')
-			    @yield('main-content')
+            <div class="container">@include('user.layouts.notification')</div>
+            @yield('main-content')
         </main>
         <!-- End of Main -->
 
@@ -22,7 +24,9 @@
         <!-- End of Footer -->
     </div>
     <!-- End of Page-wrapper -->
-	@include('frontend.layouts.tale')
-    
+    @include('frontend.layouts.tale')
+    <x-notify::notify />
+
 </body>
+
 </html>

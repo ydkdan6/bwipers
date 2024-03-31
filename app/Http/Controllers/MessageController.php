@@ -62,6 +62,8 @@ class MessageController extends Controller
         $data['photo']=Auth()->user()->photo;
         // return $data;    
         event(new MessageSent($data));
+
+        notify()->success('Message sent successfully');
         exit();
     }
 

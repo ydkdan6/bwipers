@@ -1,6 +1,6 @@
 @extends('frontend.layouts.shop')
 
-@section('title','Checkout page')
+@section('title', 'Checkout page')
 
 @section('main-content')
 
@@ -8,8 +8,8 @@
     <nav class="breadcrumb-nav">
         <div class="container">
             <ul class="breadcrumb shop-breadcrumb bb-no">
-                <li class="passed"><a href="{{route('cart')}}">Shopping Cart</a></li>
-                <li class="active"><a href="{{route('checkout')}}">Checkout</a></li>
+                <li class="passed"><a href="{{ route('cart') }}">Shopping Cart</a></li>
+                <li class="active"><a href="{{ route('checkout') }}">Checkout</a></li>
                 <li><a href="#">Order Complete</a></li>
             </ul>
         </div>
@@ -60,7 +60,8 @@
                     <button type="submit" class="btn button btn-rounded btn-coupon mb-2" name="apply_coupon" value="Apply coupon">Apply Coupon</button>
                 </div>
             </div> --}}
-            <form class="form checkout-form" method="POST" action="{{route('cart.order')}}">
+            <form class="form checkout-form" method="POST" action="{{ route('cart.order') }}" id="checkout-form">
+                @csrf
                 <div class="row mb-9">
                     <div class="col-lg-7 pr-lg-4 mb-4">
                         <h3 class="title billing-title text-uppercase ls-10 pt-1 pb-3 mb-0">
@@ -70,21 +71,21 @@
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label>First name *</label>
-                                    <input type="text" class="form-control form-control-md" name="first_name"
-                                        required value="{{old('first_name')}}">
-                                     @error('first_name')
-                                        <span class='text-danger'>{{$message}}</span>
+                                    <input type="text" class="form-control form-control-md" name="first_name" required
+                                        value="{{ old('first_name') }}">
+                                    @error('first_name')
+                                        <span class='text-danger'>{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label>Last name *</label>
-                                    <input type="text" class="form-control form-control-md" name="last_name"
-                                        required  value="{{old('last_name')}}">
-                                        @error('last_name')
-                                                <span class='text-danger'>{{$message}}</span>
-                                            @enderror
+                                    <input type="text" class="form-control form-control-md" name="last_name" required
+                                        value="{{ old('last_name') }}">
+                                    @error('last_name')
+                                        <span class='text-danger'>{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -106,15 +107,16 @@
                         <div class="form-group">
                             <label>Street address *</label>
                             <input type="text" placeholder="House number and street name"
-                                class="form-control form-control-md mb-2" name="address1" required value="{{old('address1')}}">
-                                @error('address1')
-                                                <span class='text-danger'>{{$message}}</span>
-                                            @enderror
+                                class="form-control form-control-md mb-2" name="address1" required
+                                value="{{ old('address1') }}">
+                            @error('address1')
+                                <span class='text-danger'>{{ $message }}</span>
+                            @enderror
                             <input type="text" placeholder="Apartment, suite, unit, etc. (optional)"
                                 class="form-control form-control-md" name="address2">
-                                @error('address2')
-                                                <span class='text-danger'>{{$message}}</span>
-                                            @enderror
+                            @error('address2')
+                                <span class='text-danger'>{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="row gutter-sm">
                             <div class="col-md-12">
@@ -124,9 +126,10 @@
                                 </div> --}}
                                 <div class="form-group">
                                     <label>Postal code *</label>
-                                    <input type="text" class="form-control form-control-md" name="post_code" requiredvalue="{{old('post_code')}}">
+                                    <input type="text" class="form-control form-control-md" name="post_code"
+                                        requiredvalue="{{ old('post_code') }}">
                                     @error('post_code')
-                                        <span class='text-danger'>{{$message}}</span>
+                                        <span class='text-danger'>{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
@@ -145,19 +148,21 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Phone *</label>
-                                    <input type="number" class="form-control form-control-md" name="phone" required value="{{old('phone')}}">
+                                    <input type="number" class="form-control form-control-md" name="phone" required
+                                        value="{{ old('phone') }}">
                                     @error('phone')
-                                    <span class='text-danger'>{{$message}}</span>
-                                @enderror
+                                        <span class='text-danger'>{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="form-group mb-7">
                             <label>Email address *</label>
-                            <input type="email" class="form-control form-control-md" name="email" required value="{{old('email')}}">
+                            <input type="email" class="form-control form-control-md" name="email" required
+                                value="{{ old('email') }}">
                             @error('email')
-                            <span class='text-danger'>{{$message}}</span>
-                        @enderror
+                                <span class='text-danger'>{{ $message }}</span>
+                            @enderror
                         </div>
                         {{-- <div class="form-group checkbox-toggle pb-2">
                             <input type="checkbox" class="custom-checkbox" id="shipping-toggle"
@@ -221,11 +226,10 @@
 
                         <div class="form-group mt-3">
                             <label for="order-notes">Order notes (optional)</label>
-                            <textarea class="form-control mb-0" id="order-notes" name="order_notes" cols="30"
-                                rows="4"
-                                placeholder="Notes about your order, e.g special notes for delivery"  value="{{old('order_notes')}}"></textarea>
-                                @error('order_notes')
-                                <span class='text-danger'>{{$message}}</span>
+                            <textarea class="form-control mb-0" id="order-notes" name="order_notes" cols="30" rows="4"
+                                placeholder="Notes about your order, e.g special notes for delivery" value="{{ old('order_notes') }}"></textarea>
+                            @error('order_notes')
+                                <span class='text-danger'>{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -242,21 +246,21 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach(Helper::getAllProductFromCart() as $key=>$cart)
-                                        <tr class="bb-no">
-                                            <td class="product-name">{{$cart->product['title']}} <i
-                                                    class="fas fa-times"></i> <span
-                                                    class="product-quantity">{{$cart->quantity}}</span></td>
-                                            <td class="product-total">₦{{number_format($cart['price'],2)}}</td>
-                                        </tr>
+                                        @foreach (Helper::getAllProductFromCart() as $key => $cart)
+                                            <tr class="bb-no">
+                                                <td class="product-name">{{ $cart->product['title'] }} <i
+                                                        class="fas fa-times"></i> <span
+                                                        class="product-quantity">{{ $cart->quantity }}</span></td>
+                                                <td class="product-total">₦{{ number_format($cart['price'], 2) }}</td>
+                                            </tr>
                                         @endforeach
-                                        
+
                                         <tr class="cart-subtotal bb-no">
                                             <td>
                                                 <b>Subtotal</b>
                                             </td>
                                             <td>
-                                                <b>₦{{number_format(Helper::totalCartPrice(),2)}}</b>
+                                                <b>₦{{ number_format(Helper::totalCartPrice(), 2) }}</b>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -267,31 +271,40 @@
                                                 </h4>
                                                 <ul id="shipping-method" class="mb-4">
                                                     <li>
-                                                    @if(count(Helper::shipping())>0 && Helper::cartCount()>0)
-                                                    <select name="shipping" class="form-control">
-                                                        <option value="">Select your destination</option>
-                                                        @foreach(Helper::shipping() as $shipping)
-                                                        <option value="{{$shipping->id}}" class="shippingOption" data-price="{{$shipping->price}}">{{$shipping->type}}: ₦{{$shipping->price}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                @else 
-                                                    <span>Free</span>
-                                                @endif
+                                                        @if (count(Helper::shipping()) > 0 && Helper::cartCount() > 0)
+                                                            <select name="shipping" class="form-control">
+                                                                <option value="">Select your destination</option>
+                                                                @foreach (Helper::shipping() as $shipping)
+                                                                    <option value="{{ $shipping->id }}"
+                                                                        class="shippingOption"
+                                                                        data-price="{{ $shipping->price }}">
+                                                                        {{ $shipping->type }}: ₦{{ $shipping->price }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        @else
+                                                            <span>Free</span>
+                                                        @endif
                                                     </li>
-                                                    @if(session('coupon'))
-                                            <li class="coupon_price" data-price="{{session('coupon')['value']}}">You Save<span> ₦{{number_format(session('coupon')['value'],2)}}</span></li>
-                                            @endif
-                                            @php
-                                                $total_amount=Helper::totalCartPrice();
-                                                if(session('coupon')){
-                                                    $total_amount=$total_amount-session('coupon')['value'];
-                                                }
-                                            @endphp
-                                            @if(session('coupon'))
-                                                <li class="last"  id="order_total_price">Total<span> ₦{{number_format($total_amount,2)}}</span></li>
-                                            @else
-                                                <li class="last"  id="order_total_price">Total<span> ₦{{number_format($total_amount,2)}}</span></li>
-                                            @endif
+                                                    @if (session('coupon'))
+                                                        <li class="coupon_price"
+                                                            data-price="{{ session('coupon')['value'] }}">You Save<span>
+                                                                ₦{{ number_format(session('coupon')['value'], 2) }}</span>
+                                                        </li>
+                                                    @endif
+                                                    @php
+                                                        $total_amount = Helper::totalCartPrice();
+                                                        if (session('coupon')) {
+                                                            $total_amount = $total_amount - session('coupon')['value'];
+                                                        }
+                                                    @endphp
+                                                    @if (session('coupon'))
+                                                        <li class="last" id="order_total_price">Total<span>
+                                                                ₦{{ number_format($total_amount, 2) }}</span></li>
+                                                    @else
+                                                        <li class="last" id="order_total_price">Total<span>
+                                                                ₦{{ number_format($total_amount, 2) }}</span></li>
+                                                    @endif
                                                     {{-- <li>
                                                         <div class="custom-radio">
                                                             <input type="radio" id="local-pickup"
@@ -318,7 +331,7 @@
                                                 <b>Total</b>
                                             </td>
                                             <td>
-                                                <b>₦{{number_format(Helper::totalCartPrice(),2)}}</b>
+                                                <b>₦{{ number_format(Helper::totalCartPrice(), 2) }}</b>
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -327,58 +340,40 @@
                                 <div class="payment-methods" id="payment_method">
                                     <h4 class="title font-weight-bold ls-25 pb-0 mb-1">Payment Methods</h4>
                                     <div class="accordion payment-accordion">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <a href="#cash-on-delivery" class="collapse">Direct Bank Transfor</a>
-                                            </div>
-                                            <div id="cash-on-delivery" class="card-body expanded">
-                                                <p class="mb-0">
-                                                    Make your payment directly into our bank account. 
-                                                    Please use your Order ID as the payment reference. 
-                                                    Your order will not be shipped until the funds have cleared in our account.
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <a href="#payment" class="expand">Check Payments</a>
-                                            </div>
-                                            <div id="payment" class="card-body collapsed">
-                                                <p class="mb-0">
-                                                    Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <a href="#delivery" class="expand">Cash on delivery</a>
-                                            </div>
-                                            <div id="delivery" class="card-body collapsed">
-                                                <p class="mb-0">
-                                                    Pay with cash upon delivery.
-                                                </p>
-                                            </div>
-                                        </div>
+                                        <input name="payment_method" type="hidden" value="paystack">
+
                                         <div class="card p-relative">
                                             <div class="card-header">
-                                                <a href="#paypal" class="expand">Paypal</a>
+                                                <a href="#paystack" id="paystk" class="collapse">Paystack</a>
                                             </div>
-                                            <a href="https://www.paypal.com/us/webapps/mpp/paypal-popup" class="text-primary paypal-que" 
-                                                onclick="javascript:window.open('https://www.paypal.com/us/webapps/mpp/paypal-popup','WIPaypal',
-                                                'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=1060, height=700'); 
-                                                return false;">What is PayPal?
-                                            </a>
-                                            <div id="paypal" class="card-body collapsed">
+
+                                            <div id="paystack" class="card-body expanded">
                                                 <p class="mb-0">
-                                                    Pay via PayPal, you can pay with your credit cart if you
-                                                    don't have a PayPal account.
+                                                    Pay via Paystack, you can pay with your credit cart if you
+                                                    don't have a Paystack account.
+                                                </p>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <a href="#cash-on-delivery" id="cod" class=" expand">Cash on
+                                                    Delivery</a>
+                                            </div>
+                                            <div id="cash-on-delivery" class="card-body collapsed ">
+                                                <p class="mb-0">
+                                                    Make your payment directly into our bank account.
+                                                    Please use your Order ID as the payment reference.
+                                                    Your order will not be shipped until the funds have cleared in our
+                                                    account.
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group place-order pt-6">
+                                <div class="form-group place-order pt-6"  id="placeOrder">
                                     <button type="submit" class="btn btn-dark btn-block btn-rounded">Place Order</button>
                                 </div>
                             </div>
@@ -388,84 +383,112 @@
             </form>
         </div>
     </div>
-            
+
 @endsection
 @push('styles')
-	<style>
-		li.shipping{
-			display: inline-flex;
-			width: 100%;
-			font-size: 14px;
-		}
-		li.shipping .input-group-icon {
-			width: 100%;
-			margin-left: 10px;
-		}
-		.input-group-icon .icon {
-			position: absolute;
-			left: 20px;
-			top: 0;
-			line-height: 40px;
-			z-index: 3;
-		}
-		.form-select {
-			height: 30px;
-			width: 100%;
-		}
-		.form-select .nice-select {
-			border: none;
-			border-radius: 0px;
-			height: 40px;
-			background: #f6f6f6 !important;
-			padding-left: 45px;
-			padding-right: 40px;
-			width: 100%;
-		}
-		.list li{
-			margin-bottom:0 !important;
-		}
-		.list li:hover{
-			background:#F7941D !important;
-			color:white !important;
-		}
-		.form-select .nice-select::after {
-			top: 14px;
-		}
-	</style>
+    <style>
+        li.shipping {
+            display: inline-flex;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        li.shipping .input-group-icon {
+            width: 100%;
+            margin-left: 10px;
+        }
+
+        .input-group-icon .icon {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            line-height: 40px;
+            z-index: 3;
+        }
+
+        .form-select {
+            height: 30px;
+            width: 100%;
+        }
+
+        .form-select .nice-select {
+            border: none;
+            border-radius: 0px;
+            height: 40px;
+            background: #f6f6f6 !important;
+            padding-left: 45px;
+            padding-right: 40px;
+            width: 100%;
+        }
+
+        .list li {
+            margin-bottom: 0 !important;
+        }
+
+        .list li:hover {
+            background: #F7941D !important;
+            color: white !important;
+        }
+
+        .form-select .nice-select::after {
+            top: 14px;
+        }
+    </style>
 @endpush
 @push('scripts')
-	<script src="{{asset('frontend/js/nice-select/js/jquery.nice-select.min.js')}}"></script>
-	<script src="{{ asset('frontend/js/select2/js/select2.min.js') }}"></script>
-	<script>
-		$(document).ready(function() { $("select.select2").select2(); });
-  		$('select.nice-select').niceSelect();
-	</script>
-	<script>
-		function showMe(box){
-			var checkbox=document.getElementById('shipping').style.display;
-			// alert(checkbox);
-			var vis= 'none';
-			if(checkbox=="none"){
-				vis='block';
-			}
-			if(checkbox=="block"){
-				vis="none";
-			}
-			document.getElementById(box).style.display=vis;
-		}
-	</script>
-	<script>
-		$(document).ready(function(){
-			$('.shipping select[name=shipping]').change(function(){
-				let cost = parseFloat( $(this).find('option:selected').data('price') ) || 0;
-				let subtotal = parseFloat( $('.order_subtotal').data('price') ); 
-				let coupon = parseFloat( $('.coupon_price').data('price') ) || 0; 
-				// alert(coupon);
-				$('#order_total_price span').text('$'+(subtotal + cost-coupon).toFixed(2));
-			});
+    <script src="{{ asset('frontend/js/nice-select/js/jquery.nice-select.min.js') }}"></script>
+    <script src="{{ asset('frontend/js/select2/js/select2.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $("select.select2").select2();
+        });
+        $('select.nice-select').niceSelect();
+    </script>
+    <script>
+        function showMe(box) {
+            var checkbox = document.getElementById('shipping').style.display;
+            // alert(checkbox);
+            var vis = 'none';
+            if (checkbox == "none") {
+                vis = 'block';
+            }
+            if (checkbox == "block") {
+                vis = "none";
+            }
+            document.getElementById(box).style.display = vis;
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
 
-		});
+            $('.shipping select[name=shipping]').change(function() {
+                let cost = parseFloat($(this).find('option:selected').data('price')) || 0;
+                let subtotal = parseFloat($('.order_subtotal').data('price'));
+                let coupon = parseFloat($('.coupon_price').data('price')) || 0;
+                // alert(coupon);
+                $('#order_total_price span').text('$' + (subtotal + cost - coupon).toFixed(2));
+            });
 
-	</script>
+            $('#cod').click(function() {
+               $('#checkout-form').find('input[name="payment_method"]').remove();
+                $('#checkout-form').append(
+                    '<input name="payment_method" type="hidden" value="cod">');
+            });
 
+
+            // Event listener for "Paystack" option
+            $('#paystk').click(function() {
+               $('#checkout-form').find('input[name="payment_method"]').remove();
+                $('#checkout-form').append('<input name="payment_method" type="hidden" value="paystack">');
+        });
+
+
+            // Event listener for form submission
+            $('#placeOrder').click(function () {
+
+                $('#checkout-form').submit();
+            });
+
+        });
+    </script>
 @endpush

@@ -67,6 +67,14 @@
         </div>
 
         <div class="form-group">
+          <label for="dis_price" class="col-form-label">Distributor's Price(₦) <span class="text-danger">*</span></label>
+          <input id="dis_price" type="number" name="dis_price" placeholder="Enter price"  value="{{$product->dis_price}}" class="form-control">
+          @error('dis_price')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+
+        <div class="form-group">
           <label for="discount" class="col-form-label">Discount(%)</label>
           <input id="discount" type="number" name="discount" min="0" max="100" placeholder="Enter discount"  value="{{old('discount')}}" class="form-control">
           @error('discount')

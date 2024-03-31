@@ -29,7 +29,7 @@
       </div>
       <!-- End of Main Content -->
       @include('backend.layouts.footer')
-
+      <x-notify::notify />
 </body>
 
 </html>

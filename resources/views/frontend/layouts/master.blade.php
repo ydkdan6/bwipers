@@ -5,6 +5,7 @@
   </head>
 
 <body class="home">
+  {{-- <x:notify-messages /> --}}
     <div class="page-wrapper">
         <!-- Header -->
 		@include('frontend.layouts.header')
@@ -22,6 +23,6 @@
     </div>
     <!-- End of Page-wrapper -->
 	@include('frontend.layouts.tale')
-    
+  <x-notify::notify />
 </body>
 </html>

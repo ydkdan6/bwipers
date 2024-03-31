@@ -3,7 +3,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; <a href="https://github.com/Prajwal100" target="_blank">Prajwal R.</a> {{date('Y')}}</span>
+            <span>Copyright &copy; <a href="https://techmanna.com.ng" target="_blank">Techmanna Services</a> {{date('Y')}}</span>
           </div>
         </div>
       </footer>
@@ -63,3 +63,4 @@
       $('.alert').slideUp();
     },4000);
   </script>
+@notifyJs

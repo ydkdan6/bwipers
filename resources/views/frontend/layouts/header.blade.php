@@ -23,7 +23,7 @@
                 </div>
                 <!-- End of Dropdown Menu -->
                 <span class="divider d-lg-show"></span>
-                <a href="contact-us.html" class="d-lg-show">Contact Us</a>
+                <a href="{{route('contact')}}" class="d-lg-show">Contact Us</a>
                 @auth
                 <span class="delimiter d-lg-show">/</span> 
                 <a href="{{route('user')}}" class="ml-0 d-lg-show login register">Dashboard</a>
@@ -194,7 +194,7 @@
                                 <!-- Start of Megamenu -->
                             </li>
                             <li>
-                                <a href="#">Become a Distributor</a>
+                                <a href="{{route('distributor.onboarding')}}">Become a Distributor</a>
                             </li>
                             <li>
                                 <a href="{{route('about-us')}}">About Us</a>

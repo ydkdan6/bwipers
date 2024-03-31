@@ -156,8 +156,13 @@
                                         </a>
                                         <div class="product-action-horizontal">
                                             {{-- <a data-toggle="modal" data-target="#{{$product->id}}" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></a> --}}
-                                            <a href="{{route('add-to-cart',$product->slug)}}" class="btn-product-iconbtn-cart w-icon-cart"
-                                                title="Add to cart"></a>
+                                            {{--  --}}
+                                            <form action="{{route('single-add-to-cart', $product->slug)}}" method="post" id="addProductToCart" class="d-none">
+                                                @csrf
+                                                <input type="hidden" name="quant" value="1">
+                                           </form>
+                                            <a href="{{route('add-to-cart',$product->slug)}}" class="btn-product-icon btn-cart w-icon-cart"
+                                                title="Add to cart" data-product="{{$product->slug}}"></a>
                                             <a href="{{route('add-to-wishlist',$product->slug)}}" class="btn-product-icon btn-wishlist w-icon-heart"
                                                 title="Wishlist"></a>
                                         </div>
@@ -172,7 +177,7 @@
                                            
                                         </div>
                                         <h3 class="product-name">
-                                            <a href={{route('product-detail',$product->slug)}}">{{$product->title}}</a>
+                                            <a href="{{route('product-detail',$product->slug)}}">{{$product->title}}</a>
                                         </h3>
                                         <div class="ratings-container">
                                             <div class="ratings-full">

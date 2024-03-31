@@ -2,11 +2,13 @@
 
 namespace App;
 
+use App\Models\CreditHistory;
+use Creativeorange\Gravatar\Facades\Gravatar;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use Notifiable;
 
@@ -16,7 +18,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','role','photo','status','provider','provider_id',
+        'name', 'email', 'password','role','photo','status','provider','provider_id', 'phone',
+        'business_name',
+        'address_one',
+        'address_two',
+        'country',
+        'state',
     ];
 
     /**
@@ -39,5 +46,15 @@ class User extends Authenticatable
 
     public function orders(){
         return $this->hasMany('App\Models\Order');
+    }
+
+    public function creditHistories()
+    {
+        return $this->hasMany(CreditHistory::class);
+    }
+
+    public function getGravatarAttribute()
+    {
+        return Gravatar::get($this->email);;
     }
 }

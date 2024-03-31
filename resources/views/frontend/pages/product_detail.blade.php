@@ -104,7 +104,7 @@
 										@php 
                                                     $after_discount=($product_detail->price-(($product_detail->price*$product_detail->discount)/100));
                                                 @endphp
-										<ins class="new-price">N{{number_format($after_discount,2)}} - <del>N{{number_format($product_detail->price,2)}}</del></ins>
+										<ins class="new-price">₦{{number_format($after_discount,2)}} - <del>₦{{number_format($product_detail->price,2)}}</del></ins>
 									</div>
 
 									<div class="ratings-container">

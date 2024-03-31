@@ -1,6 +1,6 @@
 @yield('meta')
 <!-- Title Tag  -->
-<title>@yield('title')</title>
+<title>@yield('title', config('app.name'))</title>
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="{{asset('frontend/assets/images/favicon.png')}}">
 
@@ -39,3 +39,4 @@
 <!-- Default CSS -->
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/style.min.css')}}">
 @stack('styles')
+@notifyCss
