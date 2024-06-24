@@ -1,6 +1,6 @@
 @extends('frontend.layouts.shop')
 
-@section('title', 'Auth')
+@section('title', 'Login / Sign up - ' . config('app.name'))
 
 @section('main-content')
     <div class="login-popup mx-auto">

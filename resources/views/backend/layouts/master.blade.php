@@ -23,7 +23,9 @@
         <!-- End of Topbar -->
 
         <!-- Begin Page Content -->
-        @yield('main-content')
+        <div class="mx-2">
+          @yield('main-content')
+        </div>
         <!-- /.container-fluid -->
 
       </div>

@@ -37,7 +37,7 @@ class CartController extends Controller
         if ($already_cart) {
             // dd($already_cart);
             $already_cart->quantity = $already_cart->quantity + 1;
-            $already_cart->amount = $product->price + $already_cart->amount;
+            $already_cart->amount = $already_cart->price  * $already_cart->quantity;
             // return $already_cart->quantity;
             if ($already_cart->product->stock < $already_cart->quantity || $already_cart->product->stock <= 0) {
                 notify()->error('Stock not sufficient!');
@@ -104,7 +104,7 @@ class CartController extends Controller
             $cart->product_id = $product->id;
             $cart->price = ($product->price - ($product->price * $product->discount) / 100);
             $cart->quantity = $request->quant[1];
-            $cart->amount = ($product->price * $request->quant[1]);
+            $cart->amount = ($cart->price * $request->quant[1]);
             if ($cart->product->stock < $cart->quantity || $cart->product->stock <= 0) {
                 notify()->error('Stock not sufficient!');
                 return back();
@@ -152,7 +152,7 @@ class CartController extends Controller
             $cart->product_id = $product->id;
             $cart->price = ($product->price - ($product->price * $product->discount) / 100);
             $cart->quantity = $quantity;
-            $cart->amount = ($product->price * $quantity);
+            $cart->amount = ($cart->price * $quantity);
             if ($cart->product->stock < $cart->quantity || $cart->product->stock <= 0) return response()->json(['error' => 'Stock not sufficient!.'], 400);
             // return $cart;
             $cart->save();
@@ -310,11 +310,10 @@ class CartController extends Controller
 
     public function checkout(Request $request)
     {
-        if (Helper::getAllProductFromCart()->count() == 0) {
+        if (Helper::getAllProductFromCart()->count() === 0) {
             notify()->error('Cart is empty');
             return redirect()->route('product-grids');
         }
-
         // $cart=session('cart');
         // $cart_index=\Str::random(10);
         // $sub_total=0;

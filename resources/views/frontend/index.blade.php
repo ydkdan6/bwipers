@@ -157,71 +157,7 @@
     </div>
     <!-- End of Iocn Box Wrapper -->
 
-    <div class="swiper-container swiper-theme category-banner-3cols pt-2 pb-2 mb-10 appear-animate"
-        data-swiper-options="{
-        'spaceBetween': 20,
-        'slidesPerView': 1,
-        'breakpoints': {
-            '576': {
-                'slidesPerView': 2
-            },
-            '992': {
-                'slidesPerView': 3
-            }
-        }
-    }">
-        <div class="swiper-wrapper row cols-lg-3 cols-sm-2 cols-1">
-            <div class="swiper-slide banner banner-fixed category-banner">
-                <figure class="br-sm">
-                    <img src="{{asset('frontend/assets/images/image8.jpg')}}" alt="Category Banner" width="400"
-                        height="100" style="background-color: #4F4B48;" />
-                </figure>
-                <div class="banner-content">
-                    <h3 class="banner-title text-white text-capitalize">
-                        <span style="color: black;">New Quality</span><br><span class="text-normal" style="color: black;">Baby Wipes</span>
-                    </h3>
-                    <a href="{{route('product-grids')}}"
-                        class="btn btn-white btn-link btn-underline btn-icon-right">
-                        Shop Now<i class="w-icon-long-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-            <!-- End of Category Banner -->
-            <div class="swiper-slide banner banner-fixed category-banner">
-                <figure class="br-sm">
-                    <img src="{{asset('frontend/assets/images/fwipes.jpg')}}" alt="Category Banner" width="400"
-                        height="200" style="background-color: #A3A3A3;" />
-                </figure>
-                <div class="banner-content">
-                    <h3 class="banner-title text-white text-capitalize ls-25">
-                        CheriX Adult Wipes<br><span class="ls-normal">For Adult Wipes</span>
-                    </h3>
-                    <a href="{{route('product-grids')}}"
-                        class="btn btn-white btn-link btn-underline btn-icon-right">
-                        Shop Now<i class="w-icon-long-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-            <!-- End of Category Banner -->
-            <div class="swiper-slide banner banner-fixed category-banner">
-                <figure class="br-sm">
-                    <img src="{{asset('frontend/assets/images/img-2.jpg')}}" alt="Category Banner" width="400"
-                        height="200" style="background-color: #151A1E;" />
-                </figure>
-                <div class="banner-content">
-                    <h3 class="banner-title text-white text-capitalize">
-                       <span style="color: black;">Explore</span><br><span style="color: #151A1E;">More of our products</span>
-                    </h3>
-                    <a href="{{route('product-grids')}}"
-                        class="btn btn-white btn-link btn-underline btn-icon-right">
-                        Shop Now<i class="w-icon-long-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-            <!-- End of Category Banner -->
-        </div>
-        <div class="swiper-pagination"></div>
-    </div>
+    {{--  --}}
     <!-- End of Category Banner 3Cols -->
     <div class="row deals-wrapper appear-animate mb-8">
         @if($featured)
@@ -285,7 +221,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="product-details scrollable">
-                                <h2 class="product-title mb-1"><a href="product-detail.html">{{$data->title}}</a></h2>
+                                <h2 class="product-title mb-1"><a href="{{ route('product-detail', $data['slug']) }}">{{$data->title}}</a></h2>
 
                                 <hr class="product-divider">
 
@@ -575,7 +511,7 @@
                                     @endphp
                                     <div class="product product-widget bb-no">
                                         <figure class="product-media">
-                                            <a href="product-detail.html">
+                                            <a href="{{ route('product-detail', $product['slug']) }}">
                                                 <img src="{{$photo[0]}}" alt="{{$photo[0]}}"
                                                     width="105" height="118" />
                                             </a>
@@ -660,40 +596,6 @@
 </div> --}}
  <!-- End of Swiper Container -->
 
- <div class="row category-banner-2cols cols-md-2 appear-animate">
-    <div class="col-md-6 mb-4">
-        <div class="banner banner-fixed br-sm">
-            <figure>
-                <img src="{{asset('frontend/assets/images/f1.jpg')}}" alt="Category Banner" width="610"
-                    height="150" style="background-color: #263032;" />
-            </figure>
-            <div class="banner-content y-50">
-                <h5 class="banner-subtitle text-white text-uppercase font-weight-bold">New Collection
-                </h5>
-                <h3 class="banner-title text-white text-capitalize ls-25">CheriX Baby Wipes</h3>
-                <div class="banner-price-info text-white">
-                    Starting at <strong class="text-secondary">#599.00</strong>
-                </div>
-            </div>
-        </div>
-        <!-- End of Category Banner -->
-    </div>
-    <div class="col-md-6 mb-4">
-        <div class="banner banner-fixed br-sm">
-            <figure>
-                <img src="{{asset('frontend/assets/images/bFriday.jpg')}}" alt="Category Banner" width="610"
-                    height="150" style="background-color: #F3F3F1;" />
-            </figure>
-            <div class="banner-content x-50 w-100 y-50 pl-3 pr-3 text-center">
-                <h5 class="banner-subtitle text-capitalize font-weight-bold"><span style="color: #F3F3F1;">Coming Soon</span></h5>
-                <div class="banner-price-info text-uppercase font-weight-bold">
-                    <span style="color: #F3F3F1;">Discount</span> &nbsp;<strong class="text-primary"><span style="color: #F3F3F1;">50%</span> Off</strong>
-                </div>
-            </div>
-        </div>
-        <!-- End of Category Banner -->
-    </div>
-</div>
 <!-- End of Category Banner 2Cols -->
 
 <div class="row grid cols-xl-5 cols-lg-4 cols-sm-3 cols-2 appear-animate" id="products-1">
@@ -727,7 +629,7 @@
                         height="260" />
                 </a>
                 <div class="product-action-vertical">
-                    <a href="{{route('add-to-wishlist',$data->slug)}}" class="btn-product-icon btn-wishlist w-icon-heart"
+                    <a href="{{route('add-to-wishlist',$product->slug)}}" class="btn-product-icon btn-wishlist w-icon-heart"
                         title="Add to wishlist"></a>
                 </div>
                 <div class="product-action">
@@ -767,164 +669,6 @@
         </div>
     </div>
     @endforeach
-    {{-- <!-- End of Grid Item -->
-    <div class="grid-item 1-2">
-        <div class="product product-simple text-center">
-            <figure class="product-media">
-                <a href="product-detail.html">
-                    <img src="{{asset('frontend/assets/images/image3.jpg')}}" alt="Product" width="232"
-                        height="260" />
-                </a>
-                <div class="product-action-vertical">
-                    <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
-                        title="Add to wishlist"></a>
-                </div>
-                <div class="product-action">
-                    <a href="#" class="btn-product btn-quickview" title="Quick View">Quick
-                        View</a>
-                </div>
-            </figure>
-            <div class="product-details">
-                <h4 class="product-name"><a href="product-detail.html">CheriX Baby Wiper -96Pcs</a></h4>
-                <div class="ratings-container">
-                    <div class="ratings-full">
-                        <span class="ratings" style="width: 100%;"></span>
-                        <span class="tooltiptext tooltip-top"></span>
-                    </div>
-                    <a href="product-detail.html" class="rating-reviews">(4 reviews)</a>
-                </div>
-                <div class="product-pa-wrapper">
-                    <div class="product-price">
-                        <ins class="new-price">#692.69</ins>
-                    </div>
-                    <div class="product-action">
-                        <a href="#"
-                            class="btn-cart btn-product btn btn-icon-right btn-link btn-underline">Add
-                            To Cart</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End of Grid Item -->
-    <div class="grid-item 1-3">
-        <div class="product product-simple text-center">
-            <figure class="product-media">
-                <a href="product-detail.html">
-                    <img src="{{asset('frontend/assets/images/trans.png')}}" alt="Product" width="232"
-                        height="260" />
-                </a>
-                <div class="product-action-vertical">
-                    <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
-                        title="Add to wishlist"></a>
-                </div>
-                <div class="product-action">
-                    <a href="#" class="btn-product btn-quickview" title="Quick View">Quick
-                        View</a>
-                </div>
-            </figure>
-            <div class="product-details">
-                <h4 class="product-name"><a href="product-detail.html">CheriX Baby Wipes -80Pcs</a>
-                </h4>
-                <div class="ratings-container">
-                    <div class="ratings-full">
-                        <span class="ratings" style="width: 100%;"></span>
-                        <span class="tooltiptext tooltip-top"></span>
-                    </div>
-                    <a href="product-detail.html" class="rating-reviews">(3 reviews)</a>
-                </div>
-                <div class="product-pa-wrapper">
-                    <div class="product-price">
-                        <ins class="new-price">#680.00</ins>
-                    </div>
-                    <div class="product-action">
-                        <a href="#"
-                            class="btn-cart btn-product btn btn-icon-right btn-link btn-underline">Add
-                            To Cart</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End of Grid Item -->
-    <div class="grid-item 1-2">
-        <div class="product product-simple text-center">
-            <figure class="product-media">
-                <a href="product-detail.html">
-                    <img src="{{asset('frontend/assets/images/image2.jpg')}}" alt="Product" width="232"
-                        height="260" />
-                </a>
-                <div class="product-action-vertical">
-                    <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
-                        title="Add to wishlist"></a>
-                </div>
-                <div class="product-action">
-                    <a href="#" class="btn-product btn-quickview" title="Quick View">Quick
-                        View</a>
-                </div>
-            </figure>
-            <div class="product-details">
-                <h4 class="product-name"><a href="product-detail.html">CheriX Baby Wipes -96Pcs</a>
-                </h4>
-                <div class="ratings-container">
-                    <div class="ratings-full">
-                        <span class="ratings" style="width: 100%;"></span>
-                        <span class="tooltiptext tooltip-top"></span>
-                    </div>
-                    <a href="product-detail.html" class="rating-reviews">(3 reviews)</a>
-                </div>
-                <div class="product-pa-wrapper">
-                    <div class="product-price">
-                        <ins class="new-price">#580.26</ins><del class="old-price">#691.69</del>
-                    </div>
-                    <div class="product-action">
-                        <a href="#"
-                            class="btn-cart btn-product btn btn-icon-right btn-link btn-underline">Add
-                            To Cart</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End of Grid Item -->
-    <div class="grid-item 1-1">
-        <div class="product product-simple text-center">
-            <figure class="product-media">
-                <a href="product-detail.html">
-                    <img src="{{asset('frontend/assets/images/image3.jpg')}}" alt="Product" width="232"
-                        height="260" />
-                </a>
-                <div class="product-action-vertical">
-                    <a href="#" class="btn-product-icon btn-wishlist w-icon-heart"
-                        title="Add to wishlist"></a>
-                </div>
-                <div class="product-action">
-                    <a href="#" class="btn-product btn-quickview" title="Quick View">Quick
-                        View</a>
-                </div>
-            </figure>
-            <div class="product-details">
-                <h4 class="product-name"><a href="product-detail.html">CheriX Baby Wipes -120Pcs</a></h4>
-                <div class="ratings-container">
-                    <div class="ratings-full">
-                        <span class="ratings" style="width: 100%;"></span>
-                        <span class="tooltiptext tooltip-top"></span>
-                    </div>
-                    <a href="product-detail.html" class="rating-reviews">(5 reviews)</a>
-                </div>
-                <div class="product-pa-wrapper">
-                    <div class="product-price">
-                        <ins class="new-price">#549.76</ins>
-                    </div>
-                    <div class="product-action">
-                        <a href="#"
-                            class="btn-cart btn-product btn btn-icon-right btn-link btn-underline">Add
-                            To Cart</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     
     <!-- End of Grid Item -->
@@ -933,65 +677,6 @@
 </div>
 <!-- End of Products 2 -->
 
-<div class="row grid grid-float mb-10 appear-animate">
-    <div class="grid-item col-md-6 height-x2">
-        <div class="banner banner-fixed banner-lg br-sm">
-            <figure>
-                <img src="{{asset('frontend/assets/images/demos/demo10/banner/2-1.jpg')}}" alt="Banner" width="610"
-                    height="420" style="background-color: #828994" />
-            </figure>
-            <div class="banner-content y-50">
-                <h5 class="banner-subtitle text-white text-uppercase ls-25">
-                    Sale Up To <strong>40% Off</strong>
-                </h5>
-                <h3 class="banner-title text-white text-capitalize ls-25">
-                   Adult Wipes<br>Category                                </h3>
-                <a href="{{route('product-grids')}}" class="btn btn-dark btn-rounded btn-icon-right">
-                    Order Now<i class="w-icon-long-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    <!-- End of Grid Item -->
-    <div class="grid-item col-sm-6 height-x1">
-        <div class="banner banner-fixed banner-md br-sm">
-            <figure>
-                <img src="{{asset('frontend/assets/images/image7.jpg')}}" alt="Banner" width="610"
-                    height="200" style="background-color: #d8dee9" />
-            </figure>
-            <div class="banner-content y-50">
-                <h5 class="banner-subtitle text-uppercase font-weight-bold" style="color: #ca6d00;">Mega Sale</h5>
-                <h3 class="banner-title ls-25 text-capitalize ls-25 lh-1 mb-4">
-                    <span class="text-uppercase text-primary">30% Off</span><br><span style="color: #f0f0f0;">CheriX Baby Wipes</span>
-                </h3>
-                <a href="{{route('product-grids')}}"
-                    class="btn btn-dark btn-link btn-underline btn-icon-right" style="color: #f0f0f0;">
-                    Shop Now<i class="w-icon-long-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    <!-- End of Grid Item -->
-    <div class="grid-item col-sm-6 height-x1">
-        <div class="banner banner-fixed banner-md br-sm">
-            <figure>
-                <img src="{{asset('frontend/assets/images/waterDrops.jpg')}}" alt="Banner" width="610"
-                    height="200" style="background-color: #424347" />
-            </figure>
-            <div class="banner-content y-50">
-                <h5 class="banner-subtitle text-uppercase text-secondary font-weight-bold">Best Seller
-                </h5>
-                <h3 class="banner-title text-white text-capitalize ls-25 lh-1">Ever Silk and Wet<br>Wipes
-                </h3>
-                <a href="{{route('product-grids')}}"
-                    class="btn btn-white btn-link btn-underline btn-icon-right">
-                    Shop Now<i class="w-icon-long-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </div>
-    <!-- End of Grid Itme -->
-</div>
 <!-- End of Grid Float -->
 <div class="row grid cols-xl-5 cols-lg-4 cols-sm-3 cols-2 appear-animate" id="products-3">
     <div class="grid-space col-xl-5col col-1"></div>

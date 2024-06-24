@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('address_two')->nullable();
             $table->string('country')->nullable();
             $table->string('state')->nullable();
+            $table->string('image')->nullable();
+            $table->string('monthly_sales_volume')->nullable();
+            $table->unsignedBigInteger('referral_id')->nullable();
         });
     }
 

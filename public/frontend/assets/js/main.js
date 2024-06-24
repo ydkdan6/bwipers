@@ -6,7 +6,7 @@ window.addEventListener('load', function() {
     var preloader = document.querySelector('.preloader');
 
     // Set the time interval (in milliseconds) before hiding the preloader
-    var delayTime = 5000; // 2000 milliseconds = 2 seconds
+    var delayTime = 2000; // 2000 milliseconds = 2 seconds
 
     // Hide the preloader after the delay
     setTimeout(function() {

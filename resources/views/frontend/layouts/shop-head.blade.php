@@ -1,6 +1,8 @@
 @yield('meta')
 <!-- Title Tag  -->
 <title>@yield('title', config('app.name'))</title>
+@notifyCss
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="{{asset('frontend/assets/images/favicon.png')}}">
 
@@ -34,9 +36,8 @@
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/vendor/magnific-popup/magnific-popup.min.css')}}">
 
 <!--Preloader -->
-<link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/style.css')}}" />
+{{-- <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/style.css')}}" /> --}}
 
 <!-- Default CSS -->
 <link rel="stylesheet" type="text/css" href="{{asset('frontend/assets/css/style.min.css')}}">
 @stack('styles')
-@notifyCss

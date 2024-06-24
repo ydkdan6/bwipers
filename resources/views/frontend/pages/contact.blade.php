@@ -159,29 +159,44 @@
 							<form class="form contact-us-form"  method="post" action="{{route('contact.store')}}" id="contactForm" novalidate="novalidate">
 								@csrf
 							<div class="form-group">
-								<label for="username">Your Name</label>
+								<label for="name">Your Name</label>
 								<input type="text" id="username" name="name"
-									class="form-control">
+									class="form-control" required>
+									@error('name')
+										<span style="color: red;" class="text-sm">{{$message}}</span>
+									@enderror
 							</div>
 							<div class="form-group">
 								<label for="subject">Subject</label>
 								<input type="text" id="subject" name="subject"
-									class="form-control">
+									class="form-control" required>
+									@error('subject')
+										<span style="color: red;" class="text-sm">{{$message}}</span>
+									@enderror
 							</div>
 							<div class="form-group">
-								<label for="email_1">Your Email</label>
-								<input type="email" id="email_1" name="email_1"
-									class="form-control">
+								<label for="email">Your Email</label>
+								<input type="email" id="email" name="email"
+									class="form-control" required>
+									@error('email')
+										<span style="color: red;" class="text-sm">{{$message}}</span>
+									@enderror
 							</div>
 							<div class="form-group">
 								<label for="phone">Your Phone Number</label>
 								<input type="number" id="phone" name="phone"
-									class="form-control">
+									class="form-control" required>
+									@error('phone')
+										<span style="color: red;" class="text-sm">{{$message}}</span>
+									@enderror
 							</div>
 							<div class="form-group">
 								<label for="message">Your Message</label>
 								<textarea id="message" name="message" cols="30" rows="5"
-									class="form-control"></textarea>
+									class="form-control" required></textarea>
+									@error('message')
+										<span style="color: red;" class="text-sm">{{$message}}</span>
+									@enderror
 							</div>
 							<button type="submit" class="btn btn-dark btn-rounded">Send Now</button>
 						</form>
@@ -202,5 +217,5 @@
 @push('scripts')
 <script src="{{ asset('frontend/assets/js/jquery.form.js') }}"></script>
 <script src="{{ asset('frontend/assets/js/jquery.validate.min.js') }}"></script>
-<script src="{{ asset('frontend/assets/js/contact.js') }}"></script>
+{{-- <script src="{{ asset('frontend/assets/js/contact.js') }}"></script> --}}
 @endpush

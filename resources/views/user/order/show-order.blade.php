@@ -13,7 +13,7 @@
     <nav class="breadcrumb-nav">
         <div class="container">
             <ul class="breadcrumb">
-                <li><a href="{{ route('home') }}">Home</a></li>
+                <li><a href="{{ route('user') }}">Home</a></li>
                 <li>My account</li>
             </ul>
         </div>
@@ -55,33 +55,33 @@
                         <div class="b-flex justify-content-between">
                             <h5 class="card-header">Order
                             </h5>
-                            <div>
+                            {{-- <div>
                                 <a href="{{ route('order.pdf', $order->id) }}"
                                     class=" btn btn-sm btn-primary shadow-sm floatright"><i
                                         class="fas fa-download fa-sm text-white-50"></i> Generate PDF</a>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="card-body">
                             @if ($order)
                                 <table class="table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>S.N.</th>
-                                            <th>Order No.</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Quantity</th>
-                                            <th>Charge</th>
-                                            <th>Total Amount</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <td style="font-weight: 700;">S.N.</td>
+                                            <td style="font-weight: 700;">Order No.</td>
+                                            <td style="font-weight: 700;">Name</td>
+                                            <td style="font-weight: 700;">Email</td>
+                                            <td style="font-weight: 700;">Quantity</td>
+                                            <td style="font-weight: 700;">Charge</td>
+                                            <td style="font-weight: 700;">Total Amount</td>
+                                            <td style="font-weight: 700;">Status</td>
+                                            <td style="font-weight: 700;">{{-- Action --}}</td>
                                         </tr>
-                                    </thead>
+                                    </tdead>
                                     <tbody>
                                         <tr>
                                             <td>{{ $order->id }}</td>
                                             <td>{{ $order->order_number }}</td>
-                                            <td>{{ $order->first_name }} {{ $order->last_name }}</td>
+                                            <td>{{ $order->name }}</td>
                                             <td>{{ $order->email }}</td>
                                             <td>{{ $order->quantity }}</td>
                                             <td>NGN{{ $order->shipping?->price }}</td>
@@ -98,7 +98,7 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <form method="POST" action="{{ route('order.destroy', [$order->id]) }}">
+                                                {{-- <form method="POST" action="{{ route('order.destroy', [$order->id]) }}">
                                                     @csrf
                                                     @method('delete')
                                                     <button class="btn btn-danger btn-sm dltBtn"
@@ -106,14 +106,14 @@
                                                         style="height:30px; width:30px;border-radius:50%"
                                                         data-toggle="tooltip" data-placement="bottom" title="Delete"><i
                                                             class="fas fa-trash-alt"></i></button>
-                                                </form>
+                                                </form> --}}
                                             </td>
 
                                         </tr>
                                     </tbody>
                                 </table>
 
-                                <section class="confirmation_part section_padding">
+                                <section class="confirmation_part section_padding pt-5">
                                     <div class="order_boxes">
                                         <div class="row">
                                             <div class="col-lg-6 col-lx-4">
@@ -144,7 +144,7 @@
                                                                     ->pluck('price');
                                                             @endphp
                                                             <td>Shipping Charge</td>
-                                                            <td> :NGN{{ $order->shipping?->price }}</td>
+                                                            <td> : NGN{{ $order->shipping?->price }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Total Amount</td>
@@ -152,10 +152,10 @@
                                                         </tr>
                                                         <tr>
                                                             <td>Payment Method</td>
-                                                            <td> : @if ($order->payment_method == 'cod')
-                                                                    Cash on Delivery
+                                                            <td> @if ($order->payment_method == 'cod')
+                                                                : Cash on Delivery
                                                                 @else
-                                                                    Paystack
+                                                                : Paystack
                                                                 @endif
                                                             </td>
                                                         </tr>
@@ -173,7 +173,7 @@
                                                     <table class="table">
                                                         <tr class="">
                                                             <td>Full Name</td>
-                                                            <td> : {{ $order->first_name }} {{ $order->last_name }}</td>
+                                                            <td> : {{ $order->name }}</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Email</td>

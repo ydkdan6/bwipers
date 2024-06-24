@@ -44,16 +44,16 @@ Route::get('storage-link', [AdminController::class, 'storageLink'])->name('stora
 
 Auth::routes(['register' => false]);
 
-Route::get('user/auth', [FrontendController::class, 'login'])->name('login.form');
-Route::post('user/auth', [FrontendController::class, 'loginSubmit'])->name('login.submit');
-Route::get('user/logout', [FrontendController::class, 'logout'])->name('user.logout');
+Route::get('user/auth', [FrontendController::class, 'login'])->name('login.form')->middleware('guest');
+Route::post('user/auth', [FrontendController::class, 'loginSubmit'])->name('login.submit')->middleware('guest');
+Route::get('user/logout', [FrontendController::class, 'logout'])->name('user.logout')->middleware('guest');
 
-// Route::get('user/register', [FrontendController::class, 'register'])->name('register.form');
-Route::post('user/register', [FrontendController::class, 'registerSubmit'])->name('register.submit');
+// Route::get('user/register', [FrontendController::class, 'register'])->name('register.form')->middleware('guest');
+Route::post('user/register', [FrontendController::class, 'registerSubmit'])->name('register.submit')->middleware('guest');
 // Reset password
-Route::post('password-reset', [FrontendController::class, 'showResetForm'])->name('password.reset');
+Route::get('password-reset', [FrontendController::class, 'showResetForm'])->name('password.reset')->middleware('guest');
 // Socialite
-Route::get('login/{provider}/', [LoginController::class, 'redirect'])->name('login.redirect');
+Route::get('login/{provider}/', [LoginController::class, 'redirect'])->name('login.redirect')->middleware('guest');
 Route::get('login/{provider}/callback/', [LoginController::class, 'Callback'])->name('login.callback');
 
 Route::get('/', [FrontendController::class, 'home'])->name('home');
@@ -206,9 +206,13 @@ Route::group(['prefix' => '/user', 'middleware' => ['user']], function () {
     Route::get('change-password', [HomeController::class, 'changePassword'])->name('user.change.password.form');
     Route::post('change-password', [HomeController::class, 'changPasswordStore'])->name('change.password');
 
-    Route::get('/become-a-distributor', [HomeController::class, 'distributorOnboarding'])->name('distributor.onboarding');
     Route::get('/become-a-distributor/process', [HomeController::class, 'distributorOnboardingProcess'])->name('distributor.onboarding.process');
+    Route::get('/become-a-sales-person/process', [HomeController::class, 'salesPersonOnboardingProcess'])->name('salesPerson.onboarding.process');
+    Route::post('/become-a-sales-person/process', [HomeController::class, 'salesPersonOnboardingRegister'])->name('salesPerson.onboarding.reg');
 });
+Route::get('/become-a-distributor', function() {
+    return view('user.distributor-onboarding');
+})->name('distributor.onboarding');
 
 // Distributor section start
 Route::group(['prefix' => '/user/distributor', 'as' => 'distributor.' , 'middleware' => ['auth', 'distributor']], function () {
@@ -223,6 +227,7 @@ Route::group(['prefix' => '/user/distributor', 'as' => 'distributor.' , 'middlew
     // Profile
     Route::get('/settings', [DistributorController::class, 'settings'])->name('distributor-settings');
     Route::post('/settings', [DistributorController::class, 'settingsUpdate'])->name('distributor-settings-update');
+    Route::post('/settings/closeAccount', [DistributorController::class, 'closeAccount'])->name('distributor-settings-close-account');
     //  Order
     Route::get('/order', "DistributorController@orderIndex")->name('distributor.order.index');
     Route::get('/order/show/{id}', "DistributorController@orderShow")->name('distributor.order.show');
@@ -242,6 +247,10 @@ Route::group(['prefix' => '/user/distributor', 'as' => 'distributor.' , 'middlew
     // Password Change
     Route::get('change-password', [DistributorController::class, 'changePassword'])->name('distributor.change.password.form');
     Route::post('change-password', [DistributorController::class, 'changPasswordStore'])->name('change.password');
+
+    // Referrals
+    Route::get('/referral-earnings', [DistributorController::class, 'referralEarnings'])->name('referral.earnings');
+    Route::get('/referrals', [DistributorController::class, 'referrals'])->name('referrals');
 });
 
 

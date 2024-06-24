@@ -8,7 +8,13 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\CreditHistory;
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\Referral;
+use App\Models\ReferralEarning;
+use App\User;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Paystack;
 
@@ -21,59 +27,27 @@ class PaymentController extends Controller
      */
     public function redirectToGateway($id)
     {
-        // dd($id);
-        // $orderData = array(
-        //     "amount" => 700 * 100,
-        //     "reference" => '4g4g5485g8545jg8gj' . uniqid(),
-        //     "email" => 'user@mail.com',
-        //     "currency" => "NGN",
-        //     "orderID" => 23456,
-        // );
+        try {
+            $user = auth()->user();
+            $cartItems = $this->getCartItems($user->id);
 
-        $cart = Cart::where('user_id', auth()->user()->id)->where('order_id', null)->get()->toArray();
+            if (empty($cartItems)) {
+                session()->flash('errors', 'Your cart is empty.');
+                return redirect()->back();
+            }
 
-        $orderData = [];
+            $orderData = $this->prepareOrderData($cartItems, $id, $user);
 
-        // return $cart;
-        $orderData['items'] = array_map(function ($item) use ($cart) {
-            $name = Product::where('id', $item['product_id'])->pluck('title');
-            return [
-                'name' => $name,
-                'price' => $item['price'],
-                'desc'  => 'Thank you for using paystack',
-                'qty' => $item['quantity']
-            ];
-        }, $cart);
+            $this->updateCartWithOrderId($user->id, $id);
 
-        $orderData['metadata']['invoice_id'] = 'ORD-' . strtoupper(uniqid());
-        $orderData['metadata']['invoice_description'] = "Order #{$orderData['metadata']['invoice_id']} Invoice";
-        $orderData['metadata']['order_id'] = $id;
-        $orderData['metadata']['redirect_url'] = route('home');
-        $orderData['metadata']['type'] = 'normal_pay';
-        // $orderData['metadata']['cancel_url'] = route('payment.cancel');
+            $paymentData = $this->preparePaymentData($orderData, $user);
 
-        $total = 0;
-        foreach ($orderData['items'] as $item) {
-            $total += $item['price'] * $item['qty'];
+            return $this->processPay($paymentData);
+        } catch (Exception $e) {
+            Log::error('Error in redirectToGateway: ' . $e->getMessage());
+            session()->flash('errors', 'Something went wrong. Please try again.');
+            return redirect()->back();
         }
-
-        $orderData['amount'] = $total;
-
-
-
-        if (session('coupon')) {
-            $orderData['metadata']['shipping_discount'] = session('coupon')['value'];
-        }
-        Cart::where('user_id', auth()->user()->id)->where('order_id', null)->update(['order_id' => $id]);
-
-        $data = [
-            'amount' =>  $orderData['amount']  * 100,
-            'email' =>  auth()->user()->email,
-            'callback_url' => route('payment.callback'),
-            'metadata' =>  $orderData['metadata'],
-        ];
-
-        return $this->processPay($data);
     }
 
     /**
@@ -82,37 +56,151 @@ class PaymentController extends Controller
      */
     public function handleGatewayCallback()
     {
-        $paymentDetails = paystack()->getPaymentData();
+        try {
+            $paymentDetails = paystack()->getPaymentData();
 
-// dd($paymentDetails);
-        if ($paymentDetails['status']) {
-            $redirect_url = $paymentDetails['data']['metadata']['redirect_url'];
-            $type = $paymentDetails['data']['metadata']['type'];
-            $order_id = $paymentDetails['data']['metadata']['order_id'];
+            if (!$paymentDetails['status']) {
+                session()->flash('errors', 'Payment failed. Please try again.');
+                return redirect()->back();
+            }
 
-            if ($type == 'credit_pay') {
+            $metadata = $paymentDetails['data']['metadata'];
+            $redirectUrl = $metadata['redirect_url'];
+            $paymentType = $metadata['type'];
+            $orderId = $metadata['order_id'];
+            $email = $metadata['email'];
 
-                $credit = CreditHistory::firstWhere('order_id', $order_id);
-
-                if ($credit) {
-                    $credit->status = 'paid';
-                    $credit->save();
-                }
+            if ($paymentType === 'credit_pay') {
+                $this->processCreditPayment($orderId);
             } else {
-
                 session()->forget('cart');
                 session()->forget('coupon');
             }
 
-            notify()->success('You successfully pay with Paystack! Thank You');
-            return redirect($redirect_url);
+            $this->handleReferralEarnings($email, $orderId);
+            $this->updateOrderStatus($orderId);
+            notify()->success('You successfully paid with Paystack! Thank you.');
+            return redirect($redirectUrl);
+        } catch (Exception $e) {
+            Log::error('Error in handleGatewayCallback: ' . $e->getMessage());
+            session()->flash('errors', 'Something went wrong. Please try again.');
+            return redirect()->back();
+        }
+    }
+
+    protected function updateOrderStatus($orderId)
+    {
+        $order = Order::where('id', $orderId)->first();
+
+        if ($order) {
+            $order->payment_status = 'paid';
+            $order->save();
+        } else {
+            Log::warning('Order not found for order ID: '. $orderId);
+        }
+    }
+
+    protected function processCreditPayment($orderId)
+    {
+        $credit = CreditHistory::firstWhere('order_id', $orderId);
+
+        if ($credit) {
+            $credit->status = 'paid';
+            $credit->save();
+        } else {
+            Log::warning('Credit history not found for order ID: ' . $orderId);
+        }
+    }
+
+    protected function handleReferralEarnings($email, $orderId)
+    {
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            Log::warning('User not found: ' . $email);
+            return;
         }
 
-        notify()->error('Something went wrong please try again!!!');
-        return redirect()->back();
-        // Now you have the payment details,
-        // you can store the authorization_code in your db to allow for recurrent subscriptions
-        // you can then redirect or do whatever you want
+        if ($user->role !== 'sales_person') {
+            Log::warning('User is not a sales person: ' . $email);
+            return;
+        }
+
+        $referral = Referral::where('user_id', $user->referral_id)->first();
+
+        if (!$referral) {
+            Log::warning('Referral not found for user ID: ' . $user->id);
+            return;
+        }
+
+        $distributor = $referral->user;
+        $distributor->earnings += 100;
+        $distributor->save();
+
+        ReferralEarning::create([
+            'user_id' => $distributor->id,
+            'order_id' => $orderId,
+            'sales_person_name' => $user->name,
+            'email' => $user->email,
+            'amount' => 100,
+        ]);
+    }
+
+    protected function getCartItems($userId)
+    {
+        return Cart::where('user_id', $userId)
+            ->where('order_id', null)
+            ->get();
+    }
+
+    protected function prepareOrderData($cartItems, $orderId, $user)
+    {
+        $items = $cartItems->map(function ($item) {
+            $product = Product::find($item->product_id);
+            return [
+                'name' => $product->title,
+                'price' => $item->price,
+                'desc' => 'Thank you for using paystack',
+                'qty' => $item->quantity
+            ];
+        })->toArray();
+
+        $totalAmount = array_reduce($items, function ($total, $item) {
+            return $total + ($item['price'] * $item['qty']);
+        }, 0);
+
+        $metadata = [
+            'invoice_id' => 'ORD-' . strtoupper(uniqid()),
+            'invoice_description' => "Order #{$orderId} Invoice",
+            'order_id' => $orderId,
+            'redirect_url' => route('home'),
+            'type' => 'normal_pay',
+            'email' => $user->email,
+            'shipping_discount' => session('coupon')['value'] ?? 0,
+        ];
+
+        return [
+            'items' => $items,
+            'amount' => $totalAmount,
+            'metadata' => $metadata,
+        ];
+    }
+
+    protected function updateCartWithOrderId($userId, $orderId)
+    {
+        Cart::where('user_id', $userId)
+            ->where('order_id', null)
+            ->update(['order_id' => $orderId]);
+    }
+
+    protected function preparePaymentData($orderData, $user)
+    {
+        return [
+            'amount' => $orderData['amount'] * 100,  // Paystack expects the amount in kobo
+            'email' => $user->email,
+            'callback_url' => route('payment.callback'),
+            'metadata' => $orderData['metadata'],
+        ];
     }
 
     public function creditPay(CreditHistory $creditHistory)
@@ -121,7 +209,7 @@ class PaymentController extends Controller
 
             $orderData = [];
 
-            $name = Product::where('id', $creditHistory->product_id)->pluck('title');
+            // $name = Product::where('id', $creditHistory->product_id)->pluck('title');
 
             $orderData['metadata']['invoice_id'] = 'ORD-' . strtoupper(uniqid());
             $orderData['metadata']['invoice_description'] = "Order #{$orderData['metadata']['invoice_id']} Invoice";
@@ -139,7 +227,8 @@ class PaymentController extends Controller
             return $this->processPay($data);
         }
 
-        notify()->error('Something went wrong please try again!!!');
+        session()->flash('error', 'Something went wrong please try again!!!');
+
         return redirect()->route('distributor.credit-history');
     }
 
@@ -149,7 +238,7 @@ class PaymentController extends Controller
         try {
             return paystack()->getAuthorizationUrl($data)->redirectNow();
         } catch (\Exception $e) {
-            notify()->error('The paystack token has expired. Please refresh the page and try again.');
+            session()->flash('error', 'The paystack token has expired. Please refresh the page and try again.');
             return Redirect::back();
         }
     }

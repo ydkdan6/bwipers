@@ -135,7 +135,8 @@
                           </a>
                       </div>-->
                       <div class="col-lg-4 col-md-6 col-sm-4 col-xs-6 mb-4">
-                          <a href="index.html">
+                          <a href="" onclick="event.preventDefault();
+                  document.getElementById('logout-form').submit();">
                               <div class="icon-box text-center">
                                   <span class="icon-box-icon icon-logout">
                                       <i class="w-icon-logout"></i>
@@ -198,11 +199,11 @@
                               <td class="order-action">
                                   <a href="{{route('user.order.show',$order->id)}}" class="btn btn-outline-warning btn-warning btn-block btn-sm btn-rounded mr-1" data-toggle="tooltip" title="view" data-placement="bottom"><i class="fas fa-eye"></i></a>
                                   <div></div>
-                                  <form method="POST" action="{{route('user.order.delete',[$order->id])}}">
+                                  {{-- <form method="POST" action="{{route('user.order.delete',[$order->id])}}">
                                     @csrf 
                                     @method('delete')
                                         <button class="btn btn-outline btn-default btn-block btn-sm btn-rounded" data-id={{$order->id}} data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fas fa-trash-alt"></i></button>
-                                  </form>
+                                  </form> --}}
                               </td>
                           </tr>  
                         @endforeach

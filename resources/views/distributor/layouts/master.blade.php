@@ -47,7 +47,7 @@
   <div class="wrapper">
       {{-- @include('notify::components.notify') --}}
 
-        {{-- @include('distributor.layouts.header') --}}
+        @include('distributor.layouts.header')
 
         <div class="dashboard_content_wrapper">
             <div class="dashboard dashboard_wrapper pr30 pr0-md">

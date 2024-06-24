@@ -11,6 +11,7 @@
                     </div>
                 </div>
             </div>
+            @include('distributor.layouts.alert')
             <div class="row">
                 @if (count($creditHistories) > 0)
                     <div class="order_table table-responsive">
@@ -30,12 +31,23 @@
                             </thead>
                             <tbody>
                                 @foreach ($creditHistories->take(15) as $i => $item)
+                                    @php
+                                        $cart = App\Models\Cart::with('product')
+                                            ->where('user_id', auth()->id())
+                                            ->where('order_id', $item->order_id)
+                                            ->get();
+
+                                    @endphp
                                     <tr>
                                         <th scope="row">#00{{ ++$i }}</th>
                                         <td>
                                             <div class="d-flex customer_info">
                                                 <div class="flex-grow-1 ms-3">
-                                                    <h5 class="mb0">{{ $item->product->title }}</h5>
+                                                    @foreach ($cart as $x)
+                                                    <h5 class="mb-1">{{ $x->product->title }} (N{{number_format($x->product->dis_price)}}, {{ $x->quantity }}
+                                                        Qty)</h5>
+                                                    @endforeach
+
                                                 </div>
                                             </div>
                                         </td>
@@ -61,6 +73,7 @@
                                                         <a href="{{ route('credit-pay', $item->id) }}"
                                                             data-bs-toggle="tooltip" data-bs-placement="top" title="Pay"
                                                             data-bs-original-title="View"
+                                                            class="btn btn-primary "
                                                             aria-label="View"><span>Pay</span></a>
                                                     </li>
                                                 @endif

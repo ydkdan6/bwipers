@@ -34,6 +34,7 @@
                 </div>
             </div>
         </div>
+        @include('distributor.layouts.alert')
         @if (count($transactions) > 0)
         <div class="order_table table-responsive">
             <table class="table">
@@ -51,17 +52,30 @@
                 <tbody>
                     @foreach ($transactions as $i => $item)
                     @php
-                        // dd($item);
+                        $cart = App\Models\Cart::with('product')->where('user_id', auth()->id())->where('order_id', $item->order_id)->get();
+
                     @endphp
                     <tr>
                         <th scope="row">#00{{++$i}}</th>
                         <td></td>
                         {{-- <td>{{$item->product->title}}</td> --}}
-                        <td></td>
+
+                        
+                        <td>
+                            <div class="d-flex customer_info">
+                                <div class="flex-grow-1 ms-3">
+                                    @foreach ($cart as $x)
+                                        <h5 class="mb-1">{{ $x->product->title }} (N{{number_format($x->product->dis_price)}}, {{ $x->quantity }}
+                                            Qty)</h5>
+                                    @endforeach
+
+                                </div>
+                            </div>
+                        </td>
                         <td class="action"><span>{{ Carbon\Carbon::parse($item->created_at)->format('M d, Y') }}</span></td>
                         <td>Paid</td>
-                        <td class="status"><span class="style1">Delivered</span></td>
-                        <td>N{{number_format($item->amount)}}</td>
+                        <td class="status"><span class="style1">{{ $item->status }}</span></td>
+                        <td>N{{number_format($item->total_amount)}}</td>
                         <td class="editing_list align-middle">
                         </td>
                     </tr>

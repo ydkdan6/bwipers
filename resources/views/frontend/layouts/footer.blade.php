@@ -17,8 +17,9 @@
                     </div>
                 </div>
                 <div class="col-xl-7 col-lg-6 col-md-9 mt-4 mt-lg-0 ">
-                    <form action="#" method="post"
+                    <form action="{{route('subscribe')}}" method="post"
                         class="input-wrapper input-wrapper-inline input-wrapper-rounded">
+                        @csrf
                         <input type="email" class="form-control mr-2 bg-white" name="email" id="email"
                             placeholder="Your E-mail Address" />
                         <button class="btn btn-dark btn-rounded" type="submit">Subscribe<i
@@ -33,7 +34,7 @@
             <div class="row">
                 <div class="col-lg-4 col-sm-6">
                     <div class="widget widget-about">
-                        <a href="index.html" class="logo-footer">
+                        <a href="/" class="logo-footer">
                             <img src="{{asset('frontend/assets/images/trans2.png')}}" alt="logo-footer" width="144"
                                 height="45" />
                         </a>
@@ -56,10 +57,10 @@
                    <div class="widget">
                         <h3 class="widget-title">Home</h3>
                         <ul class="widget-body">
-                            <li><a href="product.html">Our Products</a></li>
-                            <li><a href="#">Become a Distributor</a></li>
-                            <li><a href="about-us.html">About Us</a></li>
-                            <li><a href="contact-us.html">Contact Us</a></li>
+                            <li><a href="{{url('/shop')}}">Our Products</a></li>
+                            <li><a href="{{route('distributor.onboarding')}}">Become a Distributor</a></li>
+                            <li><a href="{{route('about-us')}}">About Us</a></li>
+                            <li><a href="{{route('contact')}}">Contact Us</a></li>
                         </ul>
                     </div>
                 </div>
@@ -67,8 +68,8 @@
                                                <div class="widget">
                         <h4 class="widget-title">My Account</h4>
                         <ul class="widget-body">
-                            <li><a href="login.html">Register</a></li>
-                            <li><a href="login.html">Sign In</a></li>
+                            <li><a href="{{route('login.form')}}">Register</a></li>
+                            <li><a href="{{route('login.form')}}">Sign In</a></li>
                             <li><a href="#">Terms and Conditions</a></li>
                         </ul>
                     </div>
@@ -91,7 +92,7 @@
         </div>
         <div class="footer-bottom container">
             <div class="footer-left">
-                <p class="copyright">Copyright © 2024 CheriX Wipes. All Rights Reserved.</p>
+                <p class="copyright">Copyright © {{date('Y')}} CheriX Wipes. All Rights Reserved.</p>
             </div>
             <div class="footer-right">
                 <span class="payment-label mr-lg-8">We're using safe payment for</span>

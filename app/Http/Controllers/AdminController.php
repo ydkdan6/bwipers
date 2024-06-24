@@ -8,7 +8,7 @@ use App\User;
 use App\Rules\MatchOldPassword;
 use Hash;
 use Carbon\Carbon;
-use Spatie\Activitylog\Models\Activity;
+use Spatie\Activityweb\Models\Activity;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 class AdminController extends Controller

@@ -380,10 +380,14 @@ class FrontendController extends Controller
         // dd($data);
         if (Auth::attempt(['email' => $data['email'], 'password' => $data['password'], 'status' => 'active'])) {
             Session::put('user', $data['email']);
-            notify()->success('Successfully login');
-            return redirect()->route('user');
+            session()->flash('success', 'Successfully login');
+            if (auth()->user()->role == 'distributor') {
+                return redirect()->route('distributor.home');
+            } else {
+                return redirect()->route('login.form');
+            }
         } else {
-            notify()->error('Invalid email and password please try again!');
+            session()->flash('error', 'Invalid email and password please try again!');
             return redirect()->route('login.form');
         }
     }
@@ -392,7 +396,7 @@ class FrontendController extends Controller
     {
         Session::forget('user');
         Auth::logout();
-        notify()->success('Logout successfully');
+        session()->flash('success', 'Logout successfully');
         return back();
     }
 
@@ -414,10 +418,10 @@ class FrontendController extends Controller
         $check = $this->create($data);
         Session::put('user', $data['email']);
         if ($check) {
-            notify()->success('Successfully registered');
+            session()->flash('success', 'Successfully registered');
             return redirect()->route('login.form');
         } else {
-            notify()->error('Please try again!');
+            session()->flash('error', 'Please try again!');
             return back();
         }
     }
@@ -433,7 +437,10 @@ class FrontendController extends Controller
     // Reset password
     public function showResetForm()
     {
-        return view('auth.passwords.old-reset');
+        $request = request();
+        $token = $request->query('token');
+        $email = $request->query('email');
+        return view('auth.passwords.old-reset', compact('email', 'token'));
     }
 
     public function subscribe(Request $request)
@@ -441,15 +448,15 @@ class FrontendController extends Controller
         if (!Newsletter::isSubscribed($request->email)) {
             Newsletter::subscribePending($request->email);
             if (Newsletter::lastActionSucceeded()) {
-                notify()->success('Subscribed! Please check your email');
+                session()->flash('success', 'Subscribed! Please check your email');
                 return redirect()->route('home');
             } else {
                 Newsletter::getLastError();
-                notify()->error('Something went wrong! please try again');
+                session()->flash('error', 'Something went wrong! please try again');
                 return back();
             }
         } else {
-            notify()->error('Already Subscribed');
+            session()->flash('error', 'Already Subscribed');
             return back();
         }
     }

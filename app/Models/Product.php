@@ -51,4 +51,52 @@ class Product extends Model
         return $this->hasMany(CreditHistory::class);
     }
 
+
+
+    public function reviews()
+    {
+        return $this->hasMany(ProductReview::class, 'product_id', 'id')->where('status', 'active');
+    }
+
+    public function averageRating()
+    {
+        return $this->reviews()->avg('rate');
+    }
+
+    public function averageRatingPercent()
+    {
+        return $this->averageRating() * 20; // Assuming 1 star = 20%
+    }
+
+    public function totalReviews()
+    {
+        return $this->reviews()->count();
+    }
+
+    public function recommendationPercentage()
+    {
+        if ($this->totalReviews() > 0) {
+            return number_format(($this->recommendationCount() / $this->totalReviews()) * 100, 1);
+        }
+        return 0;
+    }
+
+    public function recommendationCount()
+    {
+        return 0;
+        return $this->reviews()->where('recommendation', true)?->count() ?? 0;
+    }
+
+    public function ratingPercentages()
+    {
+        $ratings = [];
+
+        for ($i = 5; $i >= 1; $i--) {
+            $percentage = $this->reviews()->where('rate', $i)->count() / $this->totalReviews() * 100;
+            $ratings[$i] = round($percentage, 1);
+        }
+
+        return $ratings;
+    }
+
 }

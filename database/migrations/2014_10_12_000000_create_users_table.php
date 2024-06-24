@@ -21,10 +21,11 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('photo')->nullable();
             $table->string('phone')->nullable();
-            $table->enum('role',['admin','user','distributor'])->default('user');
+            $table->enum('role',['admin','user','distributor', 'sales_person'])->default('user');
             $table->string('provider')->nullable();
             $table->string('provider_id')->nullable();
             $table->enum('status',['active','inactive'])->default('active');
+            $table->decimal('earnings', 8, 2);
             $table->rememberToken()->nullable();
             $table->timestamps();
         });

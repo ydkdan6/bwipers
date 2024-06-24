@@ -17,7 +17,6 @@
 	<div class="page-content">
 		<div class="container">
 			<div class="row gutter-lg mb-10">
-				{{-- {{!Helper::getAllProductFromCart()}} --}}
 				@if (count(Helper::getAllProductFromCart()) !== 0)
 				<div class="col-lg-8 pr-lg-4 mb-6">
 					
@@ -202,7 +201,6 @@
 									</form>
 								</div>
 							</form>
-
 							<hr class="divider mb-6">
 							<div class="cart-subtotal d-flex align-items-center justify-content-between" style="color: rede">
 								<label class="ls-25">Total</label>

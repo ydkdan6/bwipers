@@ -1,86 +1,101 @@
 <!-- Start of Sticky Footer -->
 <div class="sticky-footer sticky-content fix-bottom">
-    <a href="index.html" class="sticky-link active">
+    <a href="/" class="sticky-link active">
         <i class="w-icon-home"></i>
         <p>Home</p>
     </a>
-    <a href="product.html" class="sticky-link">
+    <a href="{{url('/shop')}}" class="sticky-link">
         <i class="w-icon-category"></i>
         <p>Shop</p>
     </a>
-    <a href="dashboard.html" class="sticky-link">
+    <a href="{{ route('user') }}" class="sticky-link">
         <i class="w-icon-account"></i>
         <p>Account</p>
     </a>
     <div class="cart-dropdown dir-up">
-        <a href="cart.html" class="sticky-link">
+        <a href="{{ route('cart') }}" class="sticky-link">
             <i class="w-icon-cart"></i>
             <p>Cart</p>
         </a>
         <div class="dropdown-box">
-            <div class="products">
-                <div class="product product-cart">
-                    <div class="product-detail">
-                        <h3 class="product-name">
-                            <a href="product-detail.html">CheriX Baby Wipes <br>
-                                120Pcs / Pack</a>
-                        </h3>
-                        <div class="price-box">
-                            <span class="product-quantity">1</span>
-                            <span class="product-price">#625.68</span>
+            @if (Helper::getAllProductFromCart())
+
+                <div class="products">
+                    
+                    @foreach (Helper::getAllProductFromCart() as $data)
+                        @php
+                            $photo = explode(',', $data->product['photo']);
+                        @endphp
+                        <div class="product product-cart">
+                            <div class="product-detail">
+                                <a href="{{ route('product-detail', $data->product['slug']) }}"
+                                    class="product-name">{{ $data->product['title'] }}</a>
+                                <div class="price-box">
+                                    <span class="product-quantity">{{ $data->quantity }}</span>
+                                    <span class="product-price">₦{{ number_format($data->price, 2) }}</span>
+                                </div>
+                            </div>
+                            <figure class="product-media">
+                                <a href="{{ route('product-detail', $data->product['slug']) }}">
+                                    <img src="{{ $photo[0] }}" alt="{{ $data->product['slug'] }}"
+                                        height="84" width="94" />
+                                </a>
+                            </figure>
+                            <button onclick="window.location.href='{{ route('cart-delete', $data->id) }}'"
+                                class="btn btn-link btn-close" aria-label="button">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
-                    </div>
-                    <figure class="product-media">
-                        <a href="product-detail.html">
-                            <img src="{{asset('frontend/assets/images/image3.jpg" alt="product" height="84" wi')}}dth="94" />
-                        </a>
-                    </figure>
-                    <button class="btn btn-link btn-close" aria-label="button">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    @endforeach
+
+
+                <div class="cart-total">
+                    <label>Subtotal:</label>
+                    <span class="price">₦{{ number_format(Helper::totalCartPrice(), 2) }}</span>
                 </div>
 
-                <div class="product product-cart">
-                    <div class="product-detail">
-                        <h3 class="product-name">
-                            <a href="product-detail.html">CheriX Adult Wipes<br>
-                                80Pcs / Packs</a>
-                        </h3>
-                        <div class="price-box">
-                            <span class="product-quantity">2</span>
-                            <span class="product-price">#532.99</span>
-                        </div>
-                    </div>
-                    <figure class="product-media">
-                        <a href="product-detail.html">
-                            <img src="{{asset('frontend/assets/images/trans2.png" alt="product" width="84" hei')}}ght="94" />
-                        </a>
-                    </figure>
-                    <button class="btn btn-link btn-close" aria-label="button">
-                        <i class="fas fa-times"></i>
-                    </button>
+                <div class="cart-action">
+                    <a href="{{ route('cart') }}" class="btn btn-dark btn-outline btn-rounded">View Cart</a>
+                    <a href="{{ route('checkout') }}" class="btn btn-primary  btn-rounded">Checkout</a>
                 </div>
-            </div>
+            @else
+                <style>
+                    .center-vertically {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        height: 100vh;
+                        /* Optional: set a height to fill the entire viewport */
+                    }
 
-            <div class="cart-total">
-                <label>Subtotal:</label>
-                <span class="price">#1258.67</span>
-            </div>
+                    .center-vertically p {
+                        text-align: center;
+                    }
+                </style>
 
-            <div class="cart-action">
-                <a href="cart.html" class="btn btn-dark btn-outline btn-rounded">View Cart</a>
-                <a href="checkout.html" class="btn btn-primary  btn-rounded">Checkout</a>
-            </div>
+                <div class="center-vertically">
+                    <p>
+                        There are no any carts available.<br><br>
+                        <a href="{{ route('product-grids') }}"
+                            class="btn btn-dark btn-rounded btn-icon-center btn-shopping mr-auto">
+                            <i class="w-icon-cart"></i>Go to shop
+                        </a>
+                    </p>
+                </div>
+            @endif
         </div>
         <!-- End of Dropdown Box -->
     </div>
-
+    </div>
+    
     <div class="header-search hs-toggle dir-up">
         <a href="#" class="search-toggle sticky-link">
             <i class="w-icon-search"></i>
             <p>Search</p>
         </a>
-        <form action="#" class="input-wrapper">
+        <form action="{{ route('product.search') }}" method="post" class="input-wrapper">
+            @csrf
             <input type="text" class="form-control" name="search" autocomplete="off" placeholder="Search"
                 required />
             <button class="btn btn-search" type="submit">
@@ -89,6 +104,7 @@
         </form>
     </div>
 </div>
+
 <!-- End of Sticky Footer -->
 
 <!-- Start of Scroll Top -->
@@ -104,7 +120,8 @@
     <!-- End of .mobile-menu-close -->
 
     <div class="mobile-menu-container scrollable">
-        <form action="#" method="get" class="input-wrapper">
+        <form action="{{ route('product.search') }}" method="post" class="input-wrapper">
+            @csrf
             <input type="text" class="form-control" name="search" autocomplete="off" placeholder="Search"
                 required />
             <button class="btn btn-search" type="submit">
@@ -125,30 +142,30 @@
         <div class="tab-content">
             <div class="tab-pane active" id="main-menu">
                 <ul class="mobile-menu">
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="{{route('home')}}">Home</a></li>
                     <li>
-                        <a href="product.html">Our Shop</a>
+                        <a href="{{route('product-grids')}}">Our Shop</a>
                     </li>
                     <li>
-                        <a href="distributor-reg.html">Become a Distributor</a>
+                        <a href="{{route('distributor.onboarding')}}">Become a Distributor</a>
                     </li>
                     <li>
-                        <a href="about-us.html">About Us</a>
+                        <a href="{{route('about-us')}}">About Us</a>
                     </li>
                     <li>
-                        <a href="contact-us.html">Contact Us</a>
+                        <a href="{{route('contact')}}">Contact Us</a>
                     </li>
                 </ul>
             </div>
             <div class="tab-pane" id="categories">
                 <ul class="mobile-menu">
                     <li>
-                        <a href="login.html">
+                        <a href="{{route('login.form')}}">
                             <i class="w-icon-account"></i>Create account
                         </a>                                               
                     </li>
                     <li>
-                        <a href="login.html">
+                        <a href="{{route('login.form')}}">
                             <i class="w-icon-account"></i>Log In
                         </a>
                     </li>

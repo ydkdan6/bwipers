@@ -25,13 +25,13 @@
                 <span class="divider d-lg-show"></span>
                 <a href="{{route('contact')}}" class="d-lg-show">Contact Us</a>
                 @auth
-                <span class="delimiter d-lg-show">/</span> 
+                <span class="delimiterd-lg-show">/</span> 
                 <a href="{{route('user')}}" class="ml-0 d-lg-show login register">Dashboard</a>
                 @else
-                <a href="{{route('login.form')}}" class="d-lg-show login sign-in"><i
+                <a href="{{route('login.form')}}" class="d-lg-show-loginsign-in"><i
                     class="w-icon-account"></i>Sign In</a>
             <span class="delimiter d-lg-show">/</span>
-            <a href="{{route('login.form')}}" class="ml-0 d-lg-show login register">Register</a>
+            <a href="{{route('login.form')}}" class="ml-0 d-lg-show-login registe">Register</a>
                 @endauth
             </div>
         </div>
@@ -195,6 +195,9 @@
                             </li>
                             <li>
                                 <a href="{{route('distributor.onboarding')}}">Become a Distributor</a>
+                            </li>
+                            <li>
+                                <a href="{{route('salesPerson.onboarding.process')}}">Become a Sales Person</a>
                             </li>
                             <li>
                                 <a href="{{route('about-us')}}">About Us</a>

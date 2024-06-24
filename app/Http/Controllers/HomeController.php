@@ -7,7 +7,9 @@ use App\User;
 use App\Models\Order;
 use App\Models\ProductReview;
 use App\Models\PostComment;
+use App\Models\Referral;
 use App\Rules\MatchOldPassword;
+use Error;
 use Hash;
 
 class HomeController extends Controller
@@ -156,13 +158,13 @@ class HomeController extends Controller
         if ($comment) {
             $status = $comment->delete();
             if ($status) {
-               notify()->success('Post Comment successfully deleted');
+                notify()->success('Post Comment successfully deleted');
             } else {
-               notify()->error('Error occurred please try again');
+                notify()->error('Error occurred please try again');
             }
             return back();
         } else {
-           notify()->error('Post Comment not found');
+            notify()->error('Post Comment not found');
             return redirect()->back();
         }
     }
@@ -172,7 +174,7 @@ class HomeController extends Controller
         if ($comments) {
             return view('user.comment.edit')->with('comment', $comments);
         } else {
-           notify()->error('Comment not found');
+            notify()->error('Comment not found');
             return redirect()->back();
         }
     }
@@ -220,7 +222,7 @@ class HomeController extends Controller
         return redirect()->route('user')->with('success', 'Password successfully changed');
     }
 
-// to get their pages
+    // to get their pages
     public function distributorOnboarding()
     {
         return view('user.distributor-onboarding');
@@ -229,5 +231,46 @@ class HomeController extends Controller
     public function distributorOnboardingProcess()
     {
         return view('user.distributor-onboarding-process');
+    }
+
+    public function salesPersonOnboardingProcess()
+    {
+        if (auth()->user()->role == 'sales_person') {
+            return redirect()->route('user');
+        }
+        return view('user.sales-person.index');
+    }
+
+
+    public function salesPersonOnboardingRegister(Request $request)
+    {
+        try {
+            $request->validate([
+                'profile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'state' => 'required|string',
+                'monthly_sales_volume' => 'required|string',
+                'referral_code' => 'nullable|exists:referrals,code',
+                'agree' => 'required',
+            ]);
+
+            $getReferralCode = Referral::where('code', $request->referral_code)->first();
+
+            if (!$getReferralCode) {
+                throw new \Exception('Invalid code');
+            }
+
+            auth()->user()->update([
+                'role' => 'sales_person',
+                'state' => $request->state,
+                'monthly_sales_volume' => $request->monthly_sales_volume,
+                'photo' => $request->file('profile')->store('profiles/sales-person-images', 'public'),
+                'referral_id' => $getReferralCode->user_id,
+            ]);
+
+            session()->flash('success', 'Registration successful');
+            return redirect()->route('user');
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Oops! ' . $th->getMessage());
+        }
     }
 }

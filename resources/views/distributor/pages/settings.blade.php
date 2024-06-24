@@ -159,7 +159,8 @@
                 </div>
                 <div class="tab-pane fade col-xl-8" id="closeaccount" role="tabpanel" aria-labelledby="closeaccount-tab">
                   <div class="account_details_page form_grid">
-                    <form class="contact_form" name="contact_form" action="#" method="post" novalidate>
+                    <form class="contact_form" action="{{route('distributor.distributor-settings-close-account')}}" method="post" novalidate>
+                      @csrf
                       <div class="row">
                         <div class="col-md-10">
                           <h5>Close account</h5>
@@ -168,12 +169,15 @@
                         <div class="col-md-8">
                           <div class="form-group mb30">
                             <label class="form-label">Enter Password</label>
-                            <input class="form-control" type="text"  name="distributorPass" placeholder="Enter Password">
+                            <input class="form-control" type="password" required  name="password" placeholder="Enter Password">
+                            @error('password')
+                                <span style="color: red;"></span>
+                            @enderror
                           </div>
                         </div>
                         <div class="col-sm-12">
                           <div class="form-group d-grid d-sm-flex mb0">
-                            <button type="button" class="style2 btn btn-thm me-3 mb15-520">Close Account</button>
+                            <button type="submit" class="style2 btn btn-thm me-3 mb15-520">Close Account</button>
                             <button type="button" class="style2 btn btn-white">Cancel</button>
                           </div>
                         </div>

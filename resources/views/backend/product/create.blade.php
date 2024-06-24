@@ -59,7 +59,7 @@
         </div>
 
         <div class="form-group">
-          <label for="price" class="col-form-label">Price(NRS) <span class="text-danger">*</span></label>
+          <label for="price" class="col-form-label">Price(₦) <span class="text-danger">*</span></label>
           <input id="price" type="number" name="price" placeholder="Enter price"  value="{{old('price')}}" class="form-control">
           @error('price')
           <span class="text-danger">{{$message}}</span>
@@ -68,7 +68,7 @@
 
         <div class="form-group">
           <label for="dis_price" class="col-form-label">Distributor's Price(₦) <span class="text-danger">*</span></label>
-          <input id="dis_price" type="number" name="dis_price" placeholder="Enter price"  value="{{$product->dis_price}}" class="form-control">
+          <input id="dis_price" type="number" name="dis_price" placeholder="Enter price"  value="{{old('dis_price')}}" class="form-control">
           @error('dis_price')
           <span class="text-danger">{{$message}}</span>
           @enderror
@@ -92,17 +92,6 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label for="brand_id">Brand</label>
-          {{-- {{$brands}} --}}
-
-          <select name="brand_id" class="form-control">
-              <option value="">--Select Brand--</option>
-             @foreach($brands as $brand)
-              <option value="{{$brand->id}}">{{$brand->title}}</option>
-             @endforeach
-          </select>
-        </div>
 
         <div class="form-group">
           <label for="condition">Condition</label>

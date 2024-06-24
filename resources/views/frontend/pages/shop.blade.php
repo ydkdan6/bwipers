@@ -7,7 +7,7 @@
     <nav class="breadcrumb-nav">
         <div class="container">
             <ul class="breadcrumb bb-no">
-                <li><a href="demo1.html">Home</a></li>
+                <li><a href="{{route('home')}}">Home</a></li>
                 <li><a href="{{route('product-grids')}}">Shop</a></li>
                 <li>Our Shop</li>
             </ul>

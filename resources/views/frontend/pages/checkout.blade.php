@@ -18,48 +18,8 @@
 
     <div class="page-content">
         <div class="container">
-            {{-- <div class="login-toggle">
-                Returning customer? <a href="#"
-                    class="show-login font-weight-bold text-uppercase text-dark">Login</a>
-            </div> --}}
-            {{-- <form class="login-content" >
-                <p>If you have shopped with us before, please enter your details below. 
-                    If you are a new customer, please proceed to the Billing section.</p>
-                <div class="row">
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <label>Username or email *</label>
-                            <input type="text" class="form-control form-control-md" name="name"
-                                required>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="form-group">
-                            <label>Password *</label>
-                            <input type="text" class="form-control form-control-md" name="password"
-                                required>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group checkbox">
-                    <input type="checkbox" class="custom-checkbox" id="remember" name="remember">
-                    <label for="remember" class="mb-0 lh-2">Remember me</label>
-                    <a href="#" class="ml-3">Last your password?</a>
-                </div>
-                <button class="btn btn-rounded btn-login">Login</button>
-            </form>
-            <div class="coupon-toggle">
-                Have a coupon? <a href="#"
-                    class="show-coupon font-weight-bold text-uppercase text-dark">Enter your
-                    code</a>
-            </div> --}}
-            {{-- <div class="coupon-content mb-4">
-                <p>If you have a coupon code, please apply it below.</p>
-                <div class="input-wrapper-inline">
-                    <input type="text" name="coupon_code" class="form-control form-control-md mr-1 mb-2" placeholder="Coupon code" id="coupon_code">
-                    <button type="submit" class="btn button btn-rounded btn-coupon mb-2" name="apply_coupon" value="Apply coupon">Apply Coupon</button>
-                </div>
-            </div> --}}
+
+
             <form class="form checkout-form" method="POST" action="{{ route('cart.order') }}" id="checkout-form">
                 @csrf
                 <div class="row mb-9">
@@ -68,39 +28,27 @@
                             Billing Details
                         </h3>
                         <div class="row gutter-sm">
-                            <div class="col-xs-6">
+                            <div class="col-12">
                                 <div class="form-group">
-                                    <label>First name *</label>
-                                    <input type="text" class="form-control form-control-md" name="first_name" required
-                                        value="{{ old('first_name') }}">
-                                    @error('first_name')
-                                        <span class='text-danger'>{{ $message }}</span>
+                                    <label>Full name *</label>
+                                    <input type="text" class="form-control form-control-md" name="name" required
+                                        value="{{ old('name') ?? auth()->user()->name }}">
+                                    @error('name')
+                                        <span style="color: red;">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-xs-6">
-                                <div class="form-group">
-                                    <label>Last name *</label>
-                                    <input type="text" class="form-control form-control-md" name="last_name" required
-                                        value="{{ old('last_name') }}">
-                                    @error('last_name')
-                                        <span class='text-danger'>{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
+
                         </div>
-                        {{-- <div class="form-group">
-                            <label>Company name (optional)</label>
-                            <input type="text" class="form-control form-control-md" name="company-name">
-                        </div> --}}
+
                         <div class="form-group">
                             <label>Country / Region *</label>
                             <div class="select-box">
                                 <select name="country" class="form-control form-control-md">
-                                    <option value="ng" selected="selected">Nigeria
+                                    <option value="Nigeria" selected="selected">Nigeria
                                         (NG)
                                     </option>
-                                    <option value="ng">Nigeria (NG)</option>
+                                    <option value="Nigeria">Nigeria (NG)</option>
                                 </select>
                             </div>
                         </div>
@@ -108,14 +56,15 @@
                             <label>Street address *</label>
                             <input type="text" placeholder="House number and street name"
                                 class="form-control form-control-md mb-2" name="address1" required
-                                value="{{ old('address1') }}">
+                                value="{{ old('address1') ?? auth()->user()->address_one }}">
                             @error('address1')
-                                <span class='text-danger'>{{ $message }}</span>
+                                <span style="color: red;">{{ $message }}</span>
                             @enderror
                             <input type="text" placeholder="Apartment, suite, unit, etc. (optional)"
-                                class="form-control form-control-md" name="address2">
+                                class="form-control form-control-md" name="address2"
+                                value="{{ old('address2') ?? auth()->user()->address_two }}">
                             @error('address2')
-                                <span class='text-danger'>{{ $message }}</span>
+                                <span style="color: red;">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="row gutter-sm">
@@ -129,7 +78,7 @@
                                     <input type="text" class="form-control form-control-md" name="post_code"
                                         requiredvalue="{{ old('post_code') }}">
                                     @error('post_code')
-                                        <span class='text-danger'>{{ $message }}</span>
+                                        <span style="color: red;">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
@@ -149,9 +98,9 @@
                                 <div class="form-group">
                                     <label>Phone *</label>
                                     <input type="number" class="form-control form-control-md" name="phone" required
-                                        value="{{ old('phone') }}">
+                                        value="{{ old('phone') ?? auth()->user()->phone }}">
                                     @error('phone')
-                                        <span class='text-danger'>{{ $message }}</span>
+                                        <span style="color: red;">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
@@ -159,77 +108,19 @@
                         <div class="form-group mb-7">
                             <label>Email address *</label>
                             <input type="email" class="form-control form-control-md" name="email" required
-                                value="{{ old('email') }}">
+                                value="{{ old('email') ?? auth()->user()->email }}">
                             @error('email')
-                                <span class='text-danger'>{{ $message }}</span>
+                                <span style="color: red;">{{ $message }}</span>
                             @enderror
                         </div>
-                        {{-- <div class="form-group checkbox-toggle pb-2">
-                            <input type="checkbox" class="custom-checkbox" id="shipping-toggle"
-                                name="shipping-toggle">
-                            <label for="shipping-toggle">Ship to a different address?</label>
-                        </div> --}}
-                        {{-- <div class="checkbox-content">
-                            <div class="row gutter-sm">
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>First name *</label>
-                                        <input type="text" class="form-control form-control-md" name="firstname"
-                                            required>
-                                    </div>
-                                </div>
-                                <div class="col-xs-6">
-                                    <div class="form-group">
-                                        <label>Last name *</label>
-                                        <input type="text" class="form-control form-control-md" name="lastname"
-                                            required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Country / Region *</label>
-                                <div class="select-box">
-                                    <select name="country" class="form-control form-control-md">
-                                        <option value="default" selected="selected">Nigeria
-                                            (NIG)
-                                        </option>
-                                        <option value="nig">Nigeria</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Street address *</label>
-                                <input type="text" placeholder="House number and street name"
-                                    class="form-control form-control-md mb-2" name="street-address-1" required>
-                                <input type="text" placeholder="Apartment, suite, unit, etc. (optional)"
-                                    class="form-control form-control-md" name="street-address-2" required>
-                            </div>
-                            <div class="row gutter-sm">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Town / City *</label>
-                                        <input type="text" class="form-control form-control-md" name="town" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Postcode *</label>
-                                        <input type="text" class="form-control form-control-md" name="postcode" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>Country (optional)</label>
-                                        <input type="text" class="form-control form-control-md" name="zip" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
+
 
                         <div class="form-group mt-3">
                             <label for="order-notes">Order notes (optional)</label>
                             <textarea class="form-control mb-0" id="order-notes" name="order_notes" cols="30" rows="4"
                                 placeholder="Notes about your order, e.g special notes for delivery" value="{{ old('order_notes') }}"></textarea>
                             @error('order_notes')
-                                <span class='text-danger'>{{ $message }}</span>
+                                <span style="color: red;">{{ $message }}</span>
                             @enderror
                         </div>
                     </div>
@@ -373,7 +264,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group place-order pt-6"  id="placeOrder">
+                                <div class="form-group place-order pt-6" id="placeOrder">
                                     <button type="submit" class="btn btn-dark btn-block btn-rounded">Place Order</button>
                                 </div>
                             </div>
@@ -470,7 +361,7 @@
             });
 
             $('#cod').click(function() {
-               $('#checkout-form').find('input[name="payment_method"]').remove();
+                $('#checkout-form').find('input[name="payment_method"]').remove();
                 $('#checkout-form').append(
                     '<input name="payment_method" type="hidden" value="cod">');
             });
@@ -478,14 +369,14 @@
 
             // Event listener for "Paystack" option
             $('#paystk').click(function() {
-               $('#checkout-form').find('input[name="payment_method"]').remove();
+                $('#checkout-form').find('input[name="payment_method"]').remove();
                 $('#checkout-form').append('<input name="payment_method" type="hidden" value="paystack">');
-        });
+            });
 
 
             // Event listener for form submission
-            $('#placeOrder').click(function () {
-
+            $('#placeOrder').click(function(e) {
+                e.preventDefault();
                 $('#checkout-form').submit();
             });
 
