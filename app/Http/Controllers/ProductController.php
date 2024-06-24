@@ -60,7 +60,8 @@ class ProductController extends Controller
             'condition'=>'required|in:default,new,hot',
             'price'=>'required|numeric',
             'dis_price'=>'required|numeric',
-            'discount'=>'nullable|numeric'
+            'discount'=>'nullable|numeric',
+            'pack_size'=>'required|numeric',
         ]);
 
         $data=$request->all();
@@ -145,7 +146,8 @@ class ProductController extends Controller
             'condition'=>'required|in:default,new,hot',
             'price'=>'required|numeric',
             'dis_price'=>'required|numeric',
-            'discount'=>'nullable|numeric'
+            'discount'=>'nullable|numeric',
+            'pack_size'=>'required|numeric',
         ]);
 
         $data=$request->all();

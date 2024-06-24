@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('image')->nullable();
             $table->string('monthly_sales_volume')->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('bank_code')->nullable();
+            $table->string('account_number')->nullable();
             $table->unsignedBigInteger('referral_id')->nullable();
         });
     }

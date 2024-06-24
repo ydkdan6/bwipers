@@ -6,21 +6,24 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\Bank;
 use App\Models\Cart;
 use App\Models\CreditHistory;
 use App\Models\Order;
+use App\Models\PaystackPayment;
+use App\Models\PaystackTransfer;
 use App\Models\Product;
 use App\Models\Referral;
 use App\Models\ReferralEarning;
 use App\User;
 use Exception;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Paystack;
 
 class PaymentController extends Controller
 {
-
     /**
      * Redirect the User to Paystack Payment Page
      * @return Url
@@ -69,6 +72,23 @@ class PaymentController extends Controller
             $paymentType = $metadata['type'];
             $orderId = $metadata['order_id'];
             $email = $metadata['email'];
+            $referralAmount = $metadata['referral_amount'];
+            $amount = $paymentDetails['data']['amount'] / 100; // Convert from kobo to Naira
+            $transactionId = $paymentDetails['data']['reference'];
+            $userId = User::where('email', $email)->first()->id ?? null;
+
+            // Log the transaction
+            PaystackPayment::create([
+                'transaction_id' => $transactionId,
+                'user_id' => $userId,
+                'email' => $email,
+                'payment_type' => $paymentType,
+                'order_id' => $orderId,
+                'amount' => $amount,
+                'referral_amount' => $referralAmount,
+                'status' => $paymentDetails['data']['status'],
+                'response' => json_encode($paymentDetails),
+            ]);
 
             if ($paymentType === 'credit_pay') {
                 $this->processCreditPayment($orderId);
@@ -77,7 +97,7 @@ class PaymentController extends Controller
                 session()->forget('coupon');
             }
 
-            $this->handleReferralEarnings($email, $orderId);
+            $this->handleReferralEarnings($email, $orderId, $referralAmount);
             $this->updateOrderStatus($orderId);
             notify()->success('You successfully paid with Paystack! Thank you.');
             return redirect($redirectUrl);
@@ -88,6 +108,25 @@ class PaymentController extends Controller
         }
     }
 
+    public function handleDailyTransfer()
+    {
+        $users = User::all();
+
+        foreach ($users as $user) {
+
+            if ($user->earnings > 500) {
+                $accountNumber = $user->account_number;
+                $bankCode = $user->bank_code;
+                $amount = $user->earnings * 100; // Convert to kobo
+
+                $this->initiateTransfer($user, $accountNumber, $bankCode, $amount);
+            }
+        }
+
+        return 0;
+    }
+
+
     protected function updateOrderStatus($orderId)
     {
         $order = Order::where('id', $orderId)->first();
@@ -96,7 +135,7 @@ class PaymentController extends Controller
             $order->payment_status = 'paid';
             $order->save();
         } else {
-            Log::warning('Order not found for order ID: '. $orderId);
+            Log::warning('Order not found for order ID: ' . $orderId);
         }
     }
 
@@ -112,7 +151,7 @@ class PaymentController extends Controller
         }
     }
 
-    protected function handleReferralEarnings($email, $orderId)
+    protected function handleReferralEarnings($email, $orderId, $referralAmount)
     {
         $user = User::where('email', $email)->first();
 
@@ -134,7 +173,7 @@ class PaymentController extends Controller
         }
 
         $distributor = $referral->user;
-        $distributor->earnings += 100;
+        $distributor->earnings += $referralAmount;
         $distributor->save();
 
         ReferralEarning::create([
@@ -142,7 +181,7 @@ class PaymentController extends Controller
             'order_id' => $orderId,
             'sales_person_name' => $user->name,
             'email' => $user->email,
-            'amount' => 100,
+            'amount' => $referralAmount,
         ]);
     }
 
@@ -161,12 +200,17 @@ class PaymentController extends Controller
                 'name' => $product->title,
                 'price' => $item->price,
                 'desc' => 'Thank you for using paystack',
-                'qty' => $item->quantity
+                'qty' => $item->quantity,
+                'pack_size' => $product->pack_size,
             ];
         })->toArray();
 
         $totalAmount = array_reduce($items, function ($total, $item) {
             return $total + ($item['price'] * $item['qty']);
+        }, 0);
+
+        $totalReferralAmount = array_reduce($items, function ($total, $item) {
+            return $total + ($item['pack_size'] * 100);
         }, 0);
 
         $metadata = [
@@ -177,6 +221,7 @@ class PaymentController extends Controller
             'type' => 'normal_pay',
             'email' => $user->email,
             'shipping_discount' => session('coupon')['value'] ?? 0,
+            'referral_amount' => $totalReferralAmount,
         ];
 
         return [
@@ -240,6 +285,64 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             session()->flash('error', 'The paystack token has expired. Please refresh the page and try again.');
             return Redirect::back();
+        }
+    }
+
+
+    private function initiateTransfer($user, $accountNumber, $bankCode, $amount)
+    {
+
+        $paystackSecretKey = config('services.paystack.secret');
+
+        $response = Http::withToken($paystackSecretKey)->post('https://api.paystack.co/transferrecipient', [
+            "source" => "balance",
+            "reason" => "Calm down",
+            'account_number' => $accountNumber,
+            'bank_code' => $bankCode,
+            'currency' => 'NGN',
+        ]);
+
+        $status = $response->successful() ? 'success' : 'failed';
+
+        // Log transfer details
+        PaystackTransfer::create([
+            'user_id' => $user->id,
+            'amount' => $amount / 100, // Convert back to Naira
+            'account_number' => $accountNumber,
+            'bank_code' => $bankCode,
+            'status' => $status,
+            'response' => $response->body(),
+        ]);
+
+        if ($status == 'success') {
+            $user->earnings = 0; // Reset wallet balance
+            $user->save();
+
+            Log::info("Transfer successful for user {$user->id}");
+        } else {
+            Log::error("Transfer failed for user {$user->id}", [
+                'response' => $response->body()
+            ]);
+        }
+    }
+
+    public function getBankCode()
+    {
+        $paystackSecretKey = config('services.paystack.secret');
+        $response = Http::withToken($paystackSecretKey)->get('https://api.paystack.co/bank');
+
+        if ($response->successful()) {
+            $banks = $response->json()['data'];
+
+            foreach ($banks as $bank) {
+                Bank::updateOrCreate(
+                    ['code' => $bank['code']],
+                    ['name' => $bank['name']]
+                );
+            }
+            $this->info('Bank codes fetched and stored successfully.');
+        } else {
+            $this->error('Failed to fetch bank codes.');
         }
     }
 }

@@ -17,6 +17,7 @@ use App\Http\Controllers\FlutterwaveController;
 use App\Http\Controllers\PayPalController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 use \UniSharp\LaravelFilemanager\Lfm;
 
 /*
@@ -63,6 +64,7 @@ Route::get('/home', [FrontendController::class, 'index']);
 Route::get('/about-us', [FrontendController::class, 'aboutUs'])->name('about-us');
 Route::get('/faq', [FrontendController::class, 'faq'])->name('faq');
 Route::get('/contact', [FrontendController::class, 'contact'])->name('contact');
+Route::get('/privacy-policy', [FrontendController::class, 'privacy'])->name('privacy');
 Route::post('/contact/message', [MessageController::class, 'store'])->name('contact.store');
 Route::get('product/{slug}', [FrontendController::class, 'productDetail'])->name('product-detail');
 Route::post('/product/search', [FrontendController::class, 'productSearch'])->name('product.search');
@@ -259,7 +261,7 @@ Route::group(['prefix' => '/user/distributor', 'as' => 'distributor.' , 'middlew
 // The callback url after a payment
 // Route::get('/rave/callback', [FlutterwaveController::class, 'callback'])->name('callback');
 // Route::post('/webhook/flutterwave', [FlutterwaveController::class, 'webhook'])->name('webhook');
-
+Route::get('/payment-cron', [PaymentController::class, 'handleDailyTransfer'])->name('payment-cron');
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     Lfm::routes();

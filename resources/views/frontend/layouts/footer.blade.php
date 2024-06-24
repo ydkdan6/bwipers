@@ -40,7 +40,7 @@
                         </a>
                         <div class="widget-body">
                             <p class="widget-about-title">Got Question? Call us 24/7</p>
-                            <a href="tel:18005707777" class="widget-about-call">+234 905 499 5005</a>
+                            <a href="tel:2347046539854, " class="widget-about-call"> +234 704 653 9854</a>
                             <p class="widget-about-desc">Register now to getSilk and Quality products added to your cart
                             </p>
 
@@ -70,7 +70,7 @@
                         <ul class="widget-body">
                             <li><a href="{{route('login.form')}}">Register</a></li>
                             <li><a href="{{route('login.form')}}">Sign In</a></li>
-                            <li><a href="#">Terms and Conditions</a></li>
+                            <li><a href="{{route('privacy')}}">Privacy Policy</a></li>
                         </ul>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                             <li><a href="#">Payment Methods</a></li>
                             <li><a href="#">Money-back guarantee!</a></li>
                             <li><a href="#">Product Returns</a></li>
-                            <li><a href="mailto:simcherry@gmail.com">Support Center</a></li>
+                            <li><a href="mailto:cherixhq@gmail.com">Support Center</a></li>
                             <li><a href="#">Shipping</a></li>
                         </ul>
                     </div>

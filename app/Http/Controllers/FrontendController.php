@@ -58,6 +58,11 @@ class FrontendController extends Controller
         return view('frontend.pages.contact');
     }
 
+    public function privacy()
+    {
+        return view('frontend.pages.privacy-policy');
+    }
+
     public function faq()
     {
         return view('frontend.pages.faq');
@@ -384,11 +389,11 @@ class FrontendController extends Controller
             if (auth()->user()->role == 'distributor') {
                 return redirect()->route('distributor.home');
             } else {
-                return redirect()->route('login.form');
+                return redirect()->route('user');
             }
         } else {
             session()->flash('error', 'Invalid email and password please try again!');
-            return redirect()->route('login.form');
+            return redirect()->back();
         }
     }
 

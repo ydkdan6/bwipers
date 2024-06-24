@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank;
 use App\Models\Cart;
 use App\Models\CreditHistory;
 use App\Models\Order;
@@ -43,7 +44,8 @@ class DistributorController extends Controller
     public function settings()
     {
         $profile = Auth()->user();
-        return view('distributor.pages.settings', compact('profile'));
+        $banks = Bank::all();
+        return view('distributor.pages.settings', compact('profile', 'banks'));
     }
 
     public function closeAccount(Request $request)
@@ -75,10 +77,11 @@ class DistributorController extends Controller
         $status = $user->fill($data)->save();
         if ($status) {
             session()->flash('success', 'Successfully updated your profile');
+            notify()->success('Successfully updated your profile');
         } else {
             session()->flash('errors', 'Please try again!');
         }
-        return redirect()->route('distributor.home');
+        return redirect()->back();
     }
 
     public function changePassword()
@@ -302,6 +305,4 @@ class DistributorController extends Controller
         $referrals = User::whereReferralId(auth()->id())->latest()->get()->take(20);
         return view('distributor.pages.referrals', compact('referrals'));
     }
-
-
 }

@@ -113,6 +113,14 @@
         </div>
 
         <div class="form-group">
+          <label for="pack_size">Total Pack</label>
+          <input id="pack_size" type="number" name="pack_size" min="1" placeholder="E.g. 24 packs"  value="{{$product->pack_size}}" class="form-control">
+          @error('pack_size')
+          <span class="text-danger">{{$message}}</span>
+          @enderror
+        </div>
+
+        <div class="form-group">
           <label for="stock">Quantity <span class="text-danger">*</span></label>
           <input id="quantity" type="number" name="stock" min="0" placeholder="Enter quantity"  value="{{$product->stock}}" class="form-control">
           @error('stock')

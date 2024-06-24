@@ -10,13 +10,22 @@ class PaystackPayment extends Model
     use HasFactory;
 
     protected $fillable = [
+        'transaction_id',
         'user_id',
+        'email',
+        'payment_type',
         'order_id',
-        'amount_paid',
         'amount',
-        'cherix_reference',
-        'paystack_reference',
-        'currency',
+        'referral_amount',
         'status',
+        'response',
+        // 'user_id',
+        // 'order_id',
+        // 'amount_paid',
+        // 'amount',
+        // 'cherix_reference',
+        // 'paystack_reference',
+        // 'currency',
+        // 'status',
     ];
 }

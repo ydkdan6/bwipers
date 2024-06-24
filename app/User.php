@@ -20,7 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password','role','photo','status','provider','provider_id', 'phone',
+        'name', 'email', 'password', 'role', 'photo', 'status', 'provider', 'provider_id', 'phone',
         'business_name',
         'address_one',
         'address_two',
@@ -29,7 +29,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'referral_id',
         'monthly_sales_volume',
         'profile',
-        'earnings'
+        'earnings',
+        'bank_name',
+        'bank_code',
+        'account_number',
 
     ];
 
@@ -51,7 +54,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function orders(){
+    public function orders()
+    {
         return $this->hasMany('App\Models\Order');
     }
 
@@ -69,7 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Referral::class);
     }
-    
+
     public function referral()
     {
         return $this->hasOne(Referral::class);
